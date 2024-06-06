@@ -5,7 +5,6 @@
     No warranty expressed or implied. 
 */
 
-
 #ifndef RPM_h
 #define RPM_h
 
@@ -14,13 +13,11 @@ uint32_t
         r_elapsed;
 uint8_t r_pin;
 
-
 #define incRPM()                    \
         if (!digitalRead(r_pin)) {  \
             r_rpm++;                \
         }                           \
 
-// Convert pin number to register config
 #define construct_ISR(vect)         \
     ISR(vect) {                     \
         incRPM();                   \
