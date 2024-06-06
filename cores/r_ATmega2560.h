@@ -6,15 +6,15 @@ construct_ISR(PCINT2_vect)
 
 
 void r_setup(uint8_t _pin) {
-	switch(_pin) {
-	case 0:
-		PCICR |= PCIE2;
-		PCMSK2 |= PCINT8;
-		break;
-	case 10:
-		PCICR |= PCIE0;
-		PCMSK0 |= PCINT4;
-		break;    
+switch(_pin) {
+case 0:
+	PCICR |= PCIE2;
+	PCMSK2 |= PCINT8;
+	break;
+case 10:
+	PCICR |= PCIE0;
+	PCMSK0 |= PCINT4;
+	break;    
     case 11:
         PCICR |= PCIE0;
         PCMSK0 |= PCINT5;
