@@ -84,9 +84,9 @@ void loop(){
 
 #### **`RPM.buffer(uint16_t value)`** 
 
-The library starts a buffer in order to ensure there are enough samples to work with. You can change the buffer size by using the `RPM.buffer()` method. It takes in a `uint16_t` which will set the number of milliseconds the buffer stays active capturing data. Capturing RPM data via `RPM.get()` will still happen instantaniously, as the buffer works in the background. 
+The library offers a buffer in order to ensure there are enough samples to work with at low RPM. You can change the buffer size by using the `RPM.buffer()` method. It takes in a `uint16_t` which will set the number of milliseconds the buffer stays active capturing data. Capturing RPM data via `RPM.get()` will _still_ happen instantaniously, the buffer simply works in the background. 
 
-The default value is `1000` milliseconds. If you are trying to measure very low RPM values, then you may want to increase the buffer. If you are capturing really high RPMs then you might decide to decrease the buffer to increase the response time 
+The default value is `0` milliseconds. If you are trying to measure very low RPM values, then you may want to increase the buffer. 
 
 ```c++
 void setup(){
