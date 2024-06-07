@@ -92,7 +92,7 @@ The default value is `0` milliseconds. If you are trying to measure very low RPM
 void setup(){
   Serial.begin(9600); 
   RPM.pin(3); 
-  RPM.buffer(2000); 
+  RPM.buffer(1000); 
 }
 
 void loop(){
