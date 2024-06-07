@@ -8,15 +8,11 @@
 #ifndef RPM_h
 #define RPM_h
 
-static uint32_t
-        r_cpms = 0,
-        r_elapsed;
+volatile uint32_t r_cpms = 0;
+uint32_t r_elapsed; 
 uint8_t r_pin;
 
-#define incRPM()                    \
-        if (!digitalRead(r_pin)) {  \
-            r_cpms++;                \
-        }                           \
+#define incRPM() {r_cpms++;}
 
 #define construct_ISR(vect)         \
     ISR(vect) {                     \
@@ -33,8 +29,29 @@ uint8_t r_pin;
 # error Your archetecture is not yet supported.
 #endif
 
+
 class RPMclass {
 public:
+	uint8_t numOfSamples = 1; 
+
+private:
+	uint32_t arr_samples[100];
+	uint8_t index = 0; 
+	void addSample(uint32_t _sample) {
+		arr_samples[index] = _sample; 
+		if (++index > numOfSamples) index = 0; 
+	}
+	uint32_t avgSample(){
+		uint32_t sum = 0; 
+		for (int i = 0; i < numOfSamples; i++) {
+			sum += arr_samples[i];
+		}
+		return sum / numOfSamples; 
+	}
+public:
+	void samples(uint8_t _val){
+		numOfSamples = _val; 
+	}
 
     void pin(uint8_t _pin) {
         r_pin = _pin;
@@ -43,10 +60,11 @@ public:
     }
 
     uint32_t get() {
-    	uint32_t RPM = (r_cpms * 60000) / (millis() - r_elapsed);
+    	uint32_t RPM = (r_cpms * 30000) / (millis() - r_elapsed);
+    	addSample(RPM); 
         r_elapsed = millis();
         r_cpms = 0;
-        return RPM;
+        return avgSample();
     }
 };
 
