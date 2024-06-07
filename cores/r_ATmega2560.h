@@ -8,76 +8,76 @@ construct_ISR(PCINT2_vect)
 void r_setup(uint8_t _pin) {
 switch(_pin) {
 case 0:
-	PCICR |= PCIE2;
-	PCMSK2 |= PCINT8;
+	PCICR |= _BV(PCIE2);
+	PCMSK2 |= _BV(PCINT8);
 	break;
 case 10:
-	PCICR |= PCIE0;
-	PCMSK0 |= PCINT4;
+	PCICR |= _BV(PCIE0);
+	PCMSK0 |= _BV(PCINT4);
 	break;    
     case 11:
-        PCICR |= PCIE0;
-        PCMSK0 |= PCINT5;
+        PCICR |= _BV(PCIE0);
+        PCMSK0 |= _BV(PCINT5);
         break;
     case 12:
-        PCICR |= PCIE0;
-        PCMSK0 |= PCINT6;
+        PCICR |= _BV(PCIE0);
+        PCMSK0 |= _BV(PCINT6);
         break;
     case 13:
-        PCICR |= PCIE0;
-        PCMSK0 |= PCINT7;
+        PCICR |= _BV(PCIE0);
+        PCMSK0 |= _BV(PCINT7);
         break;
     case 14:
-        PCICR |= PCIE1;
-        PCMSK1 |= PCINT10;
+        PCICR |= _BV(PCIE1);
+        PCMSK1 |= _BV(PCINT10);
         break;
     case 15:
-        PCICR |= PCIE1;
-        PCMSK1 |= PCINT9;
+        PCICR |= _BV(PCIE1);
+        PCMSK1 |= _BV(PCINT9);
         break;
     case 50:
-        PCICR |= PCIE0;
-        PCMSK0 |= PCINT3;
+        PCICR |= _BV(PCIE0);
+        PCMSK0 |= _BV(PCINT3);
         break;
     case 51:
-        PCICR |= PCIE0;
-        PCMSK0 |= PCINT2;
+        PCICR |= _BV(PCIE0);
+        PCMSK0 |= _BV(PCINT2);
         break;
     case 52:
-        PCICR |= PCIE0;
-        PCMSK0 |= PCINT1;
+        PCICR |= _BV(PCIE0);
+        PCMSK0 |= _BV(PCINT1);
         break;
     case 62:
-        PCICR |= PCIE2;
-        PCMSK2 |= PCINT16;
+        PCICR |= _BV(PCIE2;
+        PCMSK2 |= _BV(PCINT16;
         break;
     case 63:
-        PCICR |= PCIE2;
-        PCMSK2 |= PCINT17;
+        PCICR |= _BV(PCIE2);
+        PCMSK2 |= _BV(PCINT17);
         break;
     case 64:
-        PCICR |= PCIE2;
-        PCMSK2 |= PCINT18;
+        PCICR |= _BV(PCIE2);
+        PCMSK2 |= _BV(PCINT18);
         break;
     case 65:
-        PCICR |= PCIE2;
-        PCMSK2 |= PCINT19;
+        PCICR |= _BV(PCIE2);
+        PCMSK2 |= _BV(PCINT19);
         break;
     case 66:
-        PCICR |= PCIE2;
-        PCMSK2 |= PCINT20;
+        PCICR |= _BV(PCIE2);
+        PCMSK2 |= _BV(PCINT20);
         break;
     case 67:
-        PCICR |= PCIE2;
-        PCMSK2 |= PCINT21;
+        PCICR |= _BV(PCIE2);
+        PCMSK2 |= _BV(PCINT21);
         break;
     case 68:
-        PCICR |= PCIE2;
-        PCMSK2 |= PCINT22;
+        PCICR |= _BV(PCIE2);
+        PCMSK2 |= _BV(PCINT22);
         break;
     case 69:
-        PCICR |= PCIE2;
-        PCMSK2 |= PCINT23;
+        PCICR |= _BV(PCIE2);
+        PCMSK2 |= _BV(PCINT23);
         break;
 
 	default:
