@@ -1,6 +1,6 @@
 ## PC_INT Pins
 
-### This file outlines which pins are PCINT compatible for a given archetecture. 
+#### This file outlines which pins are PCINT compatible for a given archetecture. 
 
 
 ### **`ATmega328P`**
