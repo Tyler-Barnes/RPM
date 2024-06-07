@@ -25,7 +25,7 @@ void r_setup(uint8_t _pin) {
 		PCICR |= _BV(PCIE0);
 		PCMSK0 |= _BV(PCINT3);
 		break;
-	case 16:
+	case 15:
 		PCICR |= _BV(PCIE0);
 		PCMSK0 |= _BV(PCINT1);
 		break;
