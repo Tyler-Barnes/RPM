@@ -9,8 +9,6 @@
 #define RPM_h
 
 volatile uint32_t r_cpms = 0;
-uint32_t r_elapsed;
-uint8_t r_pin;
 
 #define incRPM() {r_cpms++;}
 
@@ -33,17 +31,17 @@ uint8_t r_pin;
 class RPMclass {
 private:
 	uint16_t bufferSize = 1000;
+	uint32_t elapsed = 0; 
 public:
 	void pin(uint8_t _pin) {
-		r_pin = _pin;
 		pinMode(_pin, INPUT);
 		r_setup(_pin);
 	}
 
 	uint32_t get() {
-		uint32_t RPM = (r_cpms * 30000) / (millis() - r_elapsed);
-		if (millis() - r_elapsed > bufferSize) {
-			r_elapsed = millis();
+		uint32_t RPM = (r_cpms * 30000) / (millis() - elapsed);
+		if (millis() - elapsed > bufferSize) {
+			elapsed = millis();
 			r_cpms = 0;
 		}
 		return RPM;
