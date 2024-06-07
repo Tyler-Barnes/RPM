@@ -1,6 +1,6 @@
 ## **RPM Library** for Arduino
 
-**Written* by:** _Tyler Barnes_. 
+**Written by:** _Tyler Barnes_. 
 
 ### **What is the RPM library?**
 
