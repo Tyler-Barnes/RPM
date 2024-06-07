@@ -8,14 +8,14 @@
 #ifndef RPM_h
 #define RPM_h
 
-uint32_t
-        r_rpm,
+static uint32_t
+        r_cpms = 0,
         r_elapsed;
 uint8_t r_pin;
 
 #define incRPM()                    \
         if (!digitalRead(r_pin)) {  \
-            r_rpm++;                \
+            r_cpms++;                \
         }                           \
 
 #define construct_ISR(vect)         \
@@ -38,14 +38,15 @@ public:
 
     void pin(uint8_t _pin) {
         r_pin = _pin;
+        pinMode(_pin, INPUT);
         r_setup(_pin); 
     }
 
     uint32_t get() {
-        uint32_t cpms = r_rpm / (millis() - r_elapsed);
+    	uint32_t RPM = (r_cpms * 60000) / (millis() - r_elapsed);
         r_elapsed = millis();
-        r_rpm = 0;
-        return cpms / 60000;
+        r_cpms = 0;
+        return RPM;
     }
 };
 
