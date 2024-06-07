@@ -59,15 +59,15 @@ void loop(){
 }
 ```
 
-A list of the PCINT compatible pins is provided in the file named `PCINT_Pins.txt`. 
+A list of the PCINT compatible pins is provided in the file named `PCINT_Pins.MD`. 
 
 #### **`RPM.get()`** 
 
 The `RPM.get()` method returns a `uint32_t` containg the RPM value measured on the pin specified by `RPM.pin()`. 
 
+```c++
 #include <RPM.h>
 
-```c++
 void setup(){
   Serial.begin(9600); 
   RPM.pin(3); 
@@ -89,6 +89,8 @@ The library offers a buffer in order to ensure there are enough samples to work 
 The default value is `0` milliseconds. If you are trying to measure very low RPM values, then you may want to increase the buffer. 
 
 ```c++
+#include <RPM.h>
+
 void setup(){
   Serial.begin(9600); 
   RPM.pin(3); 
