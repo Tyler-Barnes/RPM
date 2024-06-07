@@ -1,7 +1,7 @@
 ## This file outlines which pins are PCINT compatible for a given archetecture. 
 
 
-### ** `ATmega328P` **
+### **`ATmega328P`**
 
 #### **`PCINT0_vect`**
 - 9
@@ -27,7 +27,7 @@
 - 6
 - 7
 
-### ** `ATmega32U4` **
+### **`ATmega32U4`**
 
 #### **`PCINT0_vect`**
 - 10
