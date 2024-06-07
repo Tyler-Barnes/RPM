@@ -30,7 +30,7 @@ volatile uint32_t r_cpms = 0;
 
 class RPMclass {
 private:
-	uint16_t bufferSize = 1000;
+	uint16_t bufferSize = 250;
 	uint32_t elapsed = 0; 
 public:
 	void pin(uint8_t _pin) {
