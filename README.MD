@@ -75,7 +75,6 @@ void setup(){
 
 void loop(){
   Serial.println(RPM.get());
-  delay(250); 
 }
 ```
 
@@ -104,7 +103,6 @@ void setup(){
 
 void loop(){
   Serial.println(RPM.get());
-  delay(250); 
 }
 ```
 
@@ -112,10 +110,32 @@ To set the buffer back to the default dynamic mode, pass the built in constant `
 
 ```c++
 RPM.buffer(DYNAMIC); 
+```  
+
+#### **`RPM.samples(uint8_t value)`**
+
+The library supports sample averaging. If you would like to use a rolling average on the last returned RPM values, you can specify the number of samples you'd like to capture and avergate together.
+
+```c++
+#include <RPM.h>
+
+void setup(){
+  Serial.begin(9600); 
+  RPM.pin(3); 
+  RPM.buffer(DYNAMIC);
+  RPM.samples(5);  
+}
+
+void loop(){
+  Serial.println(RPM.get());
+}
 ```
 
 ### **An important note on performance and accuracy**
 
-Accuracy overall is about ±5%. There is some inaccuracy introduced by calling `millis()`, as well as by interrupts happening while calculations are made. 
+Accuracy overall is about ±2%. There is some inaccuracy introduced by calling `millis()`, as well as by interrupts happening while calculations are made. 
 
-Low RPM values are more difficult the measure than higher ones. There will ultimately be a lower limit at which data will start to break down the lower the RPM becomes.  
+Low RPM values are more difficult the measure than higher ones. There will ultimately be a lower limit at which data will start to break down the lower the RPM becomes.
+
+
+You can gain marginal improvement by using the sample averaging via `RPM.samples()`.
