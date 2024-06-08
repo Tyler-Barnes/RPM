@@ -28,13 +28,13 @@ volatile uint32_t *r_cpms[2] = {&r_cpms1, &r_cpms2};
 
 class RPMclass {
 private:
-    long bufferSize = 0;    
     int bufferMode = DYNAMIC;   
     uint8_t nSamples = 0;
     uint8_t index = 0;
     uint8_t trigger = 1; 
     uint8_t active = 0;
     uint16_t aSamples[100] = {0};
+    uint32_t bufferSize = 0;    
     uint32_t delta1 = 0; 
     uint32_t delta2 = 0; 
     uint32_t *aDelta [2] = {&delta1, &delta2}; 
@@ -103,7 +103,7 @@ public:
     }
 
     void buffer(int _size) {
-        bufferSize = (long)_size * 1000l;
+        bufferSize = (uint32_t)_size * 1000ul;
         bufferMode = _size;  
     }
 };
