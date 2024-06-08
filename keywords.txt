@@ -9,7 +9,7 @@ pin	KEYWORD2
 get	KEYWORD2
 incRPM	KEYWORD2
 samples	KEYWORD2
-ticks	KEYWORD2
+buffer	KEYWORD2
 rpm_release_vectors	KEYWORD2
 
 
