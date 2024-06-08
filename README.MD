@@ -135,7 +135,7 @@ void loop(){
 
 ### **An important note on performance and accuracy**
 
-Accuracy overall is about ±2%. There is some inaccuracy introduced by calling `millis()`, as well as by interrupts happening while calculations are made. 
+Accuracy overall is about ±2%. There is some inaccuracy introduced by calling `micros()`, as well as by interrupts happening while calculations are made. 
 
 Low RPM values are more difficult the measure than higher ones. There will ultimately be a lower limit at which data will start to break down the lower the RPM becomes.
 
