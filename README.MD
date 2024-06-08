@@ -84,13 +84,15 @@ void loop(){
 
 #### **`RPM.buffer(int value)`** 
 
-The library implements a buffer in order to ensure there are enough samples to work with at low RPM. This buffer is dynamic, and changes it's size based on the current RPM value. 
+The library implements a buffer in order to ensure there are enough samples to work with at low RPM. This buffer is dynamic, and changes it's own size based on the current RPM value. 
 
 If the RPM is slow, then the buffer size is increased in order to handle it. 
 
-If the RPM is fast, then the buffer suize is reduced in order to increase the response time. 
+If the RPM is fast, then the buffer size is reduced in order to increase the response time. 
 
-You can change the buffer size to a constant value by using the `RPM.buffer()` method. It takes in a `int` which will set the number of milliseconds the buffer stays active capturing data. Capturing RPM data via `RPM.get()` will _still_ happen instantaniously, the buffer simply works in the background. 
+Capturing RPM data via `RPM.get()` will _still_ happen instantaniously, the buffer simply works in the background. The buffer size will dictate how long it takes for the returned value to settle into the correct value.
+
+If you wish, you can change the buffer size to a constant value by using the `RPM.buffer()` method. It takes in a `int` which will set the size of the buffer in `milliseconds`.   
 
 The default value is the built in constant `DYNAMIC`. 
 
@@ -112,8 +114,6 @@ void loop(){
 
 ### **An important note on performance and accuracy**
 
-The faster you access the `RPM.get()` method, the less accurate the value will be. The library needs to accumulate enough samples to give you an accurate result. 
+Accuracy overall is about ±5%. There is some inaccuracy introduced by calling `millis()`, as well as by interrupts happening while calculations are made. 
 
-Low RPM values are intrinsically difficult, since the microcontroller operates at very fast speeds in comparison to the data being aquired. You will either need to increase the buffer size, or delay access to the `RPM.get()` method by doing some other processing in the meantime, or adding in a `delay()`. 
-
-There will ultimately be a lower limit at which data will start to break down and give you glitches as the buffer resets.  
+Low RPM values are more difficult the measure than higher ones. There will ultimately be a lower limit at which data will start to break down the lower the RPM becomes.  

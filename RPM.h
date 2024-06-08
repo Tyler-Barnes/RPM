@@ -23,8 +23,6 @@ volatile uint32_t *r_cpms[2] = {&r_cpms1, &r_cpms2};
 
 #include <cores/cores.h>
 
-
-
 class RPMclass {
 private:
 	int bufferMode = DYNAMIC; 
@@ -36,6 +34,22 @@ private:
     uint16_t duration1, duration2; 
 	uint16_t *duration[2] = {&duration1, &duration2};
 	uint8_t active = 0;
+	uint16_t aSamples[100]; 
+	uint8_t nSamples = 10; 
+	uint8_t index = 0; 
+
+	void addSample(uint16_t _sample) {
+		if (++index > nSamples) index = 0;
+		aSamples[index] = _sample;
+	}
+
+	uint16_t avgSamples() {
+		uint32_t sum = 0;
+		for (int i = 0; i < nSamples; i++) {
+			sum += aSamples[i]; 
+		}
+		return sum / nSamples; 
+	}
 public:
     void pin(uint8_t _pin) {
         pinMode(_pin, INPUT);
@@ -45,7 +59,7 @@ public:
     uint32_t get() {
     	*duration[active] = (millis() - *delta[active]);
         uint32_t RPM = (*r_cpms[active] * 30000) / *duration[active];
-
+        addSample(RPM); 
         if (bufferMode == DYNAMIC) {
 	        if (RPM > 10000) bufferSize = 0; 
 	        else if (RPM > 5000) bufferSize = 500;
@@ -62,12 +76,16 @@ public:
             active ^= 1; 
             trigger = 1; 
         }
-        return RPM;
+        return avgSamples();
     }
 
     void buffer(int _size){
         bufferSize = _size; 
         bufferMode = _size; 
+    }
+
+    void samples(uint8_t _samples) {
+    	nSamples = _samples; 
     }
 };
 
