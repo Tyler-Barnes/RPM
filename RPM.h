@@ -30,7 +30,7 @@ class RPMclass {
 private:
 	long bufferSize = 0;	
 	int bufferMode = DYNAMIC;	
-	uint8_t nSamples = 5;
+	uint8_t nSamples = 0;
 	uint8_t	index = 0;
 	uint8_t trigger = 1; 
 	uint8_t active = 0;
@@ -102,7 +102,7 @@ public:
     	nSamples = _samples; 
     }
 
-    void buffer( int _size) {
+    void buffer(int _size) {
     	bufferSize = (long)_size * 1000l;
     	bufferMode = _size;  
     }
