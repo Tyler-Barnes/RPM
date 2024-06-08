@@ -17,7 +17,7 @@ volatile uint32_t r_cpms = 0;
         incRPM();                   \
     }
 
-#include <cores.h>
+#include <cores/cores.h>
 
 
 class RPMclass {
