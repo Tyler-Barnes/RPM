@@ -76,7 +76,6 @@ void setup(){
 void loop(){
   Serial.println(RPM.get());
   delay(250); 
-
 }
 ```
 
@@ -106,7 +105,6 @@ void setup(){
 void loop(){
   Serial.println(RPM.get());
   delay(250); 
-
 }
 ```
 
