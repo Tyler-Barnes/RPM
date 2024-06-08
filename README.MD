@@ -94,8 +94,6 @@ Capturing RPM data via `RPM.get()` will _still_ happen instantaniously, the buff
 
 If you wish, you can change the buffer size to a constant value by using the `RPM.buffer()` method. It takes in a `int` which will set the size of the buffer in `milliseconds`.   
 
-The default value is the built in constant `DYNAMIC`. 
-
 ```c++
 #include <RPM.h>
 
@@ -110,6 +108,12 @@ void loop(){
   delay(250); 
 
 }
+```
+
+To set the buffer back to the default dynamic mode, pass the built in constant `DYNAMIC` into the method. 
+
+```c++
+RPM.buffer(DYNAMIC); 
 ```
 
 ### **An important note on performance and accuracy**
