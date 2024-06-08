@@ -39,7 +39,7 @@ void loop(){
 
 ```
 
-The library provides a global variable named `RPM`, you use this variable to access the library functions. The methods provided in the RPM class are listed below.
+The library provides a global variable named `RPM`, you use this variable to access the library methods. The methods provided in the RPM class are listed below.
 
 ### **Library functions**
 
