@@ -50,7 +50,8 @@ public:
 	        if (RPM > 10000) bufferSize = 0; 
 	        else if (RPM > 5000) bufferSize = 500;
 	        else if (RPM > 1000) bufferSize = 1000;
-	        else bufferSize = 2000;
+	        else if (RPM > 500) bufferSize = 2000;
+	        else bufferSize = 3000;
 	    }
         if (*duration[active] > bufferSize / 2 && trigger) {
         	*delta[active^1] = millis();
