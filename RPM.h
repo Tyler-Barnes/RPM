@@ -107,7 +107,7 @@ public:
             active ^= 1; 
             trigger = 1; 
         } 
-        return (micros() - r_lastTick < 1000000) ? ceil(avgSamples() / r_nSensors) : 0;
+        return (micros() - r_lastTick < 1500000) ? ceil(avgSamples() / r_nSensors) : 0;
     }
 
     void samples(int _samples) {
