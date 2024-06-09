@@ -106,13 +106,13 @@ void loop(){
 }
 ```
 
-To set the buffer back to the default dynamic mode, pass the built in constant `DYNAMIC` into the method. 
+To set the buffer back to the default dynamic mode, pass the built in constant `DYNAMIC` into the `RPM.buffer()` method. 
 
 ```c++
 RPM.buffer(DYNAMIC); 
 ```  
 
-#### **`RPM.samples(uint8_t value)`**
+#### **`RPM.samples(int value)`**
 
 The library supports sample averaging. If you would like to use a rolling average on the last returned RPM values, you can specify the number of samples you'd like to capture and avergate together.
 
@@ -143,9 +143,9 @@ Low RPM values are more difficult the measure than higher ones. There will ultim
 
 You can get a marginal improvement to performance by using multiple sensors. 
 
-The placement of the second sensor is important. I suggest placing a second sensor 180° out of phase with the first one. 
+The placement of the second sensor is important for accuracy. I suggest placing a second sensor 180° out of phase with the first one. This means if you are measuring a rotating object, then one sensor would be on either side. 
 
-Once it is physically placed, simply define another `RPM.pin()` and the library will start using both to accumulate sample data. 
+Once it is accurately placed, simply define another `RPM.pin()` and the library will start using both sensors to accumulate sample data. 
 
 ```c++
 #include <RPM.h>
@@ -209,3 +209,8 @@ void loop() {
 }
 
 ```
+
+If you choose to use multiple sensors while also using `rpm_release_vectors`, make sure that the pins chosen are both on the same `PCINT_vector`. 
+
+
+

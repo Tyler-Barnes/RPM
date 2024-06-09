@@ -110,7 +110,7 @@ public:
         return (micros() - r_lastTick < 1000000) ? ceil(avgSamples() / r_nSensors) : 0;
     }
 
-    void samples(uint8_t _samples) {
+    void samples(int _samples) {
         nSamples = _samples;
         sampleMode = _samples;  
     }
