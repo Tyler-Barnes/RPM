@@ -165,7 +165,7 @@ void loop(){
 
 The library automatically defines `ISR()` functions in order to keep track on the incoming data. In order to make the library as easy to use and as universal as possible, it pre-defines every pin change interrupt (`PCINTn_vect`) available. 
 
-If you try to define a `ISR()` function with a pin chanage interrupt vector in it, then you will get an error explaining:
+If you try to define a `ISR()` function with a pin chanage interrupt, you will get an error explaining:
 
 ```
 RPM:12:5: error: redefinition of 'void __vector_3()'
