@@ -59,7 +59,7 @@ void loop(){
 }
 ```
 
-A list of the PCINT compatible pins is provided in the file named `PCINT_Pins.MD`. 
+A list of the PCINT compatible pins is provided in the file named [`PCINT_Pins.MD`](https://github.com/Tyler-Barnes/RPM/blob/main/PCINT_Pins.MD). 
 
 #### **`RPM.get()`** 
 
@@ -183,7 +183,7 @@ If you would like to use a pin change interrupt for something other than the RPM
 
 This will release the `ISR()` functions, and hand over the control to the end user. This means, however that you will need to manually setup the `ISR()` that the RPM library needs to use. 
 
-To do this, start by finding which interrupt vector your chosen pin needs ot utilize. You can find a list of the pins and their vectors in the file named `PCINT_Pins.MD`. 
+To do this, start by finding which interrupt vector your chosen pin needs ot utilize. You can find a list of the pins and their vectors in the file named [`PCINT_Pins.MD`](https://github.com/Tyler-Barnes/RPM/blob/main/PCINT_Pins.MD). 
 
 Once you have the vector id, add the function `incRPM()` into the `ISR()` function. 
 
