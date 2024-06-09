@@ -8,7 +8,10 @@
 #ifndef RPM_h
 #define RPM_h
 
+uint8_t r_nSensors = 0;  
 volatile uint32_t r_intMicros; 
+volatile uint32_t r_tOut; 
+volatile uint32_t r_lastTick; 
 volatile uint32_t r_cpms1 = 0;
 volatile uint32_t r_cpms2 = 0;
 volatile uint32_t *r_cpms[2] = {&r_cpms1, &r_cpms2};
@@ -17,6 +20,7 @@ volatile uint32_t *r_cpms[2] = {&r_cpms1, &r_cpms2};
 #define incRPM() {          \
     r_intMicros = micros(); \
     r_cpms1++; r_cpms2++;   \
+    r_lastTick = micros();  \
 }
 
 #define construct_ISR(vect)         \
@@ -27,9 +31,10 @@ volatile uint32_t *r_cpms[2] = {&r_cpms1, &r_cpms2};
 #include <cores/cores.h>
 
 class RPMclass {
-private:
-    int bufferMode = DYNAMIC;   
-    uint8_t nSamples = 0;
+public:
+    int bufferMode = DYNAMIC; 
+    int sampleMode = DYNAMIC;   
+    uint8_t nSamples;
     uint8_t index = 0;
     uint8_t trigger = 1; 
     uint8_t active = 0;
@@ -48,12 +53,12 @@ private:
         aSamples[index] = _sample;
     }
 
-    uint16_t avgSamples() {
+    double avgSamples() {
         uint32_t sum = 0;
         for (int i = 0; i < nSamples; i++) {
             sum += aSamples[i]; 
         }
-        return sum / nSamples; 
+        return (double)sum / (double)nSamples; 
     }
 
     void fillArr(uint32_t _rpm) {
@@ -64,14 +69,16 @@ private:
 
 public:
     void pin(uint8_t _pin) {
+        r_nSensors++; 
         pinMode(_pin, INPUT);
         r_setup(_pin);
     }
 
     uint32_t get() {
         intMicros = r_intMicros; 
-        *duration[active] = (intMicros - *aDelta[active]);
-        RPM = round((double)(*r_cpms[active] * 30000000.0) / (double)*duration[active]);
+        *duration[active] = intMicros - *aDelta[active];
+        r_tOut = micros() - r_lastTick;
+        RPM = ceil((double)(*r_cpms[active] * 30000000.0) / (double)*duration[active]);
         if (avgSamples() == 0) {
             fillArr(RPM); 
         } else {
@@ -79,11 +86,17 @@ public:
         }
 
         if (bufferMode == DYNAMIC) {
-            if (RPM > 10000) bufferSize = 0; 
-            else if (RPM > 5000) bufferSize = 500000;
+            if (RPM > 10000) bufferSize = 500000; 
             else if (RPM > 1000) bufferSize = 1000000;
-            else if (RPM > 500000) bufferSize = 2000000;
-            else bufferSize = 3000000;
+            else if (RPM > 500) bufferSize = 2500000;
+            else if (RPM > 100) bufferSize = 5000000;
+            else bufferSize = 10000000;
+        }
+
+        if (sampleMode == DYNAMIC) {
+            if (RPM > 5000) nSamples = 3;
+            else if (RPM > 250) nSamples = 5;
+            else bufferSize = 8;
         }
 
         if (*duration[active] > bufferSize / 2 && trigger) {
@@ -95,11 +108,17 @@ public:
             active ^= 1; 
             trigger = 1; 
         } 
-        return avgSamples();
+
+        if (*duration[active] > bufferSize / 2 && trigger) {
+            r_lastTick = micros();
+        }
+
+        return (r_tOut < *duration[active]) ? ceil(avgSamples() / r_nSensors) : 0 ;
     }
 
     void samples(uint8_t _samples) {
-        nSamples = _samples; 
+        nSamples = _samples;
+        sampleMode = _samples;  
     }
 
     void buffer(int _size) {
