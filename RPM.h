@@ -10,6 +10,7 @@
 
 uint8_t r_nSensors = 0;  
 volatile uint32_t r_intMicros; 
+volatile uint32_t r_lastTick; 
 volatile uint32_t r_cpms1 = 0;
 volatile uint32_t r_cpms2 = 0;
 volatile uint32_t *r_cpms[2] = {&r_cpms1, &r_cpms2};
@@ -18,6 +19,7 @@ volatile uint32_t *r_cpms[2] = {&r_cpms1, &r_cpms2};
 #define incRPM() {          \
     r_intMicros = micros(); \
     r_cpms1++; r_cpms2++;   \
+    r_lastTick = micros();  \
 }
 
 #define construct_ISR(vect)         \
@@ -105,7 +107,7 @@ public:
             active ^= 1; 
             trigger = 1; 
         } 
-        return ceil(avgSamples() / r_nSensors);
+        return (micros() - r_lastTick < 1000000) ? ceil(avgSamples() / r_nSensors) : 0;
     }
 
     void samples(uint8_t _samples) {
