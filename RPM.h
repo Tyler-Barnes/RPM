@@ -82,14 +82,14 @@ public:
         } else {
             addSample(RPM); 
         }
-
+        float bufferScale; 
         if (bufferMode == DYNAMIC) {
-            if (RPM > 10000) bufferSize = 250; 
-            else if (RPM > 1000) bufferSize = 500;
-            else if (RPM > 500) bufferSize = 1000;
-            else if (RPM > 100) bufferSize = 5000;
-            else bufferSize = 10000;
-            bufferSize *= 1000; 
+            if (RPM > 20000) bufferScale = 500; 
+            else if (RPM > 10000) bufferScale = 200; 
+            else if (RPM > 5000) bufferScale = 100; 
+            else if (RPM > 500) bufferScale = 50; 
+            else bufferScale = 15; 
+            bufferSize = 1.0 / ((double)RPM / (30000000.0 * bufferScale));
         }
 
         if (sampleMode == DYNAMIC) {
