@@ -39,11 +39,11 @@ void loop(){
 
 ```
 
-The library provides a global variable named `RPM`, you use this variable to access the library methods. The methods provided in the RPM class are listed below.
+The library provides a global variable named `RPM`, you use this variable to access the library's methods. The methods provided in the RPM class are listed below.
 
 ### **Library functions**
 
-#### **`RPM.pin( pin )`** 
+#### **`RPM.pin(pin)`** 
 
 To specify which pin you would like to read your RPM sensor with, call the `RPM.pin()` method, and pass in the PCINT compatible pin. 
 
