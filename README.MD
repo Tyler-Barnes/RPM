@@ -165,7 +165,14 @@ void loop(){
 
 The library automatically defines `ISR()` functions in order to keep track on the incoming data. In order to make the library as easy to use and as universal as possible, it pre-defines every pin change interrupt (`PCINTn_vect`) available. 
 
-If you try to define a `ISR()` function with a pin chanage interrupt vector in it, then you will get an error explaining `error: redefinition`. 
+If you try to define a `ISR()` function with a pin chanage interrupt vector in it, then you will get an error explaining:
+
+```
+RPM:12:5: error: redefinition of 'void __vector_3()'
+ ISR(PCINT0_vect){
+     ^
+
+``` 
 
 If you would like to use a pin change interrupt for something other than the RPM library, you can define `rpm_release_vectors` above where you `#include` the `RPM.h` file. 
 
@@ -186,6 +193,10 @@ Once you have the vector id, add the function `incRPM()` into the `ISR()` functi
 
 ISR(PCINT0_vect) {
     incRPM(); 
+}
+
+ISR(PCINT1_vect){
+    // whatever you want
 }
 
 void setup() {
