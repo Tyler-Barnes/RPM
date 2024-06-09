@@ -131,7 +131,7 @@ void loop(){
 }
 ```
 
-`RPM.samples()` is set to `0` by default. 
+`RPM.samples()` is set to `DYNAMIC` by default, which increases the avgeraging for lower RPMs and decreases it for higher RPMs. 
 
 ### **An important note on performance and accuracy**
 
