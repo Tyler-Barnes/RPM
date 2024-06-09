@@ -51,7 +51,7 @@ To specify which pin you would like to read your RPM sensor with, call the `RPM.
 #include <RPM.h>
 
 void setup(){
-  RPM.pin(3); 
+    RPM.pin(3); 
 }
 
 void loop(){
@@ -69,12 +69,12 @@ The `RPM.get()` method returns a `uint32_t` containg the RPM value measured on t
 #include <RPM.h>
 
 void setup(){
-  Serial.begin(9600); 
-  RPM.pin(3); 
+    Serial.begin(9600); 
+    RPM.pin(3); 
 }
 
 void loop(){
-  Serial.println(RPM.get());
+    Serial.println(RPM.get());
 }
 ```
 
@@ -96,13 +96,13 @@ If you wish, you can change the buffer size to a constant value by using the `RP
 #include <RPM.h>
 
 void setup(){
-  Serial.begin(9600); 
-  RPM.pin(3); 
-  RPM.buffer(1000); 
+    Serial.begin(9600); 
+    RPM.pin(3); 
+    RPM.buffer(1000); 
 }
 
 void loop(){
-  Serial.println(RPM.get());
+    Serial.println(RPM.get());
 }
 ```
 
@@ -120,14 +120,14 @@ The library supports sample averaging. If you would like to use a rolling averag
 #include <RPM.h>
 
 void setup(){
-  Serial.begin(9600); 
-  RPM.pin(3); 
-  RPM.buffer(DYNAMIC);
-  RPM.samples(5);  
+    Serial.begin(9600); 
+    RPM.pin(3); 
+    RPM.buffer(DYNAMIC);
+    RPM.samples(5);  
 }
 
 void loop(){
-  Serial.println(RPM.get());
+    Serial.println(RPM.get());
 }
 ```
 
@@ -135,9 +135,66 @@ void loop(){
 
 ### **An important note on performance and accuracy**
 
-Accuracy overall is about ±2%. There is some inaccuracy introduced by calling `micros()`, as well as by interrupts happening while calculations are made. 
+Accuracy overall is about ±1%. There is some inaccuracy introduced by calling `micros()`, as well as by interrupts happening while calculations are made. 
 
-Low RPM values are more difficult the measure than higher ones. There will ultimately be a lower limit at which data will start to break down the lower the RPM becomes.
+Low RPM values are more difficult the measure than higher ones. There will ultimately be a lower limit at which data will start to break down the lower the RPM becomes. I have found that I can read down to 60RPM, but the time it takes to accumulate enough samples means that it takes some time to settle into the correct value. 
 
+### **Using Multiple Sensors**
 
-You can gain marginal improvement by using the sample averaging via `RPM.samples()`.
+You can get a marginal improvement to performance by using multiple sensors. 
+
+The placement of the second sensor is important. I suggest placing a second sensor 180° out of phase with the first one. 
+
+Once it is physically placed, simply define another `RPM.pin()` and the library will start using both to accumulate sample data. 
+
+```c++
+#include <RPM.h>
+
+void setup(){
+    Serial.begin(9600); 
+    RPM.pin(3); 
+    RPM.pin(5); 
+}
+
+void loop(){
+    Serial.println(RPM.get());
+}
+```
+
+### **`rpm_release_vectors`**
+
+The library automatically defines `ISR()` functions in order to keep track on the incoming data. In order to make the library as easy to use and as universal as possible, it pre-defines every pin change interrupt (`PCINTn_vect`) available. 
+
+If you try to define a `ISR()` function with a pin chanage interrupt vector in it, then you will get an error explaining `error: redefinition`. 
+
+If you would like to use a pin change interrupt for something other than the RPM library, you can define `rpm_release_vectors` above where you `#include` the `RPM.h` file. 
+
+```c++
+#define rpm_release_vectors
+#include <RPM.h>
+```
+
+This will release the `ISR()` functions, and hand over the control to the end user. This means, however that you will need to manually setup the `ISR()` that the RPM library needs to use. 
+
+To do this, start by finding which interrupt vector your chosen pin needs ot utilize. You can find a list of the pins and their vectors in the file named `PCINT_Pins.MD`. 
+
+Once you have the vector id, add the function `incRPM()` into the `ISR()` function. 
+
+```c++
+#define rpm_release_vectors
+#include <RPM.h>
+
+ISR(PCINT0_vect) {
+    incRPM(); 
+}
+
+void setup() {
+    Serial.begin(9600); 
+    RPM.pin(3); 
+}
+
+void loop() {
+    Serial.println(RPM.get());
+}
+
+```
