@@ -27,7 +27,6 @@ void incRPM();
 uint8_t r_pindex[r_nPins] = {0}; // pin's index into the cpms array;
 uint8_t r_mode = AGGREGATE; 
 uint8_t r_sensors = 0;  
-uint8_t r_instances = 0;  
 uint8_t r_pin[r_spaces] = {0};  // contains the pin number of active sensors
 uint8_t r_state[r_spaces] = {0}; // pin state after digitalRead in interrupt
 volatile uint32_t r_intMicros; 
@@ -58,11 +57,9 @@ class RPMclass {
 public:
     int bufferMode = DYNAMIC; 
     uint8_t tooManySensors = 0;
-    uint8_t index = 0;
     uint8_t trigger[r_spaces] = {0}; 
     uint8_t active[r_spaces] = {0};
     uint16_t RPM;
-    uint32_t cpms;
     uint32_t intMicros;
     uint32_t userBufferSize = 0; 
     uint32_t bufferSize[r_spaces] = {0};    
@@ -102,13 +99,13 @@ public:
     }
 
     uint16_t get(uint8_t _pin = 0) {
-        checkError(); 
+        checkError(); // doesn't work in pin() method for some reason
         uint8_t PIN = (r_mode) ? 0 : r_pindex[r_avrPin(_pin)];
         intMicros = r_intMicros; 
         duration[active[PIN]][PIN] = (intMicros - delta[active[PIN]][PIN]);
-        cpms = r_cpms[active[PIN]][PIN]; 
-        RPM = ceil((double)(cpms * 30000000.0) / (double)duration[active[PIN]][PIN]);
+        RPM = ceil((double)(r_cpms[active[PIN]][PIN] * 30000000.0) / (double)duration[active[PIN]][PIN]);
         
+        // Change buffer size based on calculated RPM
         float bufferSamples; 
         if (bufferMode == DYNAMIC) {
             if (RPM > 20000) bufferSamples = 500; 
@@ -122,6 +119,7 @@ public:
             bufferSize[PIN] = userBufferSize; 
         }
 
+        // Split buffering allows cpms values to reset without any issues. 
         if (duration[active[PIN]][PIN] > bufferSize[PIN] / 2 && trigger[PIN]) {
             delta[active[PIN]^1][PIN] = intMicros;
             r_cpms[active[PIN]^1][PIN] = 0; 
