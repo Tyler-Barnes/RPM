@@ -204,7 +204,6 @@ If you try to define a `ISR()` function with a pin chanage interrupt, you will g
 RPM:12:5: error: redefinition of 'void __vector_3()'
  ISR(PCINT0_vect){
      ^
-
 ``` 
 
 If you would like to use a pin change interrupt for something other than the RPM library, you can define `rpm_release_vectors` above where you `#include` the `RPM.h` file. 
