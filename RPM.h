@@ -11,7 +11,7 @@
 #define DYNAMIC -1
 #define SEPARATE 0
 #define AGGREGATE 1
-#define r_spaces 3
+#define r_arrSize 3
 #define maxBuffSize 5000000
 #define halt() while(1){}
 
@@ -27,12 +27,12 @@ void incRPM();
 uint8_t r_pindex[r_nPins] = {0};    // pin's index into the cpus array; r_nPins defined in cores.h
 uint8_t r_mode = AGGREGATE; 
 uint8_t r_sensors = 0;  
-uint8_t r_pin[r_spaces] = {0};      // contains the pin number of active sensors
-uint8_t r_state[r_spaces] = {0};    // pin state after digitalRead in interrupt
+uint8_t r_pin[r_arrSize] = {0};      // contains the pin number of active sensors
+uint8_t r_state[r_arrSize] = {0};    // pin state after digitalRead in interrupt
 volatile uint32_t r_intMicros; 
 volatile uint32_t r_lastTick; 
-volatile uint32_t r_cpus0[r_spaces] = {0};
-volatile uint32_t r_cpus1[r_spaces] = {0};
+volatile uint32_t r_cpus0[r_arrSize] = {0};
+volatile uint32_t r_cpus1[r_arrSize] = {0};
 volatile uint32_t *r_cpus[2] = {r_cpus0, r_cpus1}; // index [][0] used for aggregate..
 
 void incRPM() {                                                     
@@ -57,17 +57,17 @@ class RPMclass {
 private:
     int bufferMode = DYNAMIC; 
     uint8_t tooManySensors = 0;
-    uint8_t trigger[r_spaces] = {0}; 
-    uint8_t active[r_spaces] = {0};
+    uint8_t trigger[r_arrSize] = {0}; 
+    uint8_t active[r_arrSize] = {0};
     uint16_t RPM;
     uint32_t intMicros;
     uint32_t userBufferSize = 0; 
-    uint32_t bufferSize[r_spaces] = {0};    
-    uint32_t duration1[r_spaces] = {0}; 
-    uint32_t duration2[r_spaces] = {0}; 
+    uint32_t bufferSize[r_arrSize] = {0};    
+    uint32_t duration1[r_arrSize] = {0}; 
+    uint32_t duration2[r_arrSize] = {0}; 
     uint32_t *duration[2] = {duration1, duration2};
-    uint32_t delta1[r_spaces] = {0}; 
-    uint32_t delta2[r_spaces] = {0}; 
+    uint32_t delta1[r_arrSize] = {0}; 
+    uint32_t delta2[r_arrSize] = {0}; 
     uint32_t *delta[2] = {delta1, delta2};
 
     void addPin(uint8_t _pin) {
@@ -79,7 +79,7 @@ private:
     void checkError() {
         if (tooManySensors) {
             char buff[10]; 
-            sprintf(buff, "\nMaximum number of sensors is %d.\n", r_spaces - 1);
+            sprintf(buff, "\nMaximum number of sensors is %d.\n", r_arrSize - 1);
             Serial.end();
             Serial.begin(9600);
             Serial.print(buff);
@@ -89,7 +89,7 @@ private:
 
 public:
     void pin(uint8_t _pin) {
-        if (r_sensors >= r_spaces - 1) {
+        if (r_sensors >= r_arrSize - 1) {
             tooManySensors = 1;
             return;
         }
