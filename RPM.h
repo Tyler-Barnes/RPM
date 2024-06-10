@@ -14,7 +14,6 @@
 #define r_arrSize 3     // {aggregate, separate1, separate2}
 #define maxBuffSize 5000000
 #define halt() while(1){}
-#define timeOut 1500000
 
 void incRPM();
 
@@ -61,6 +60,7 @@ private:
     uint8_t trigger[r_arrSize] = {0}; 
     uint8_t active[r_arrSize] = {0};
     uint16_t RPM;
+    uint16_t timeOut = 1000;
     uint32_t intMicros;
     uint32_t userBufferSize = 0; 
     uint32_t bufferSize[r_arrSize] = {0};    
@@ -110,10 +110,8 @@ public:
         // Change buffer size based on calculated RPM
         float bufferSamples; 
         if (bufferMode == DYNAMIC) {
-            if (RPM > 20000) bufferSamples = 400; 
-            else if (RPM > 10000) bufferSamples = 200; 
-            else if (RPM > 5000) bufferSamples = 100; 
-            else if (RPM > 500) bufferSamples = 50; 
+            if (RPM > 5000) bufferSamples = 25; 
+            else if (RPM > 500) bufferSamples = 15; 
             else bufferSamples = 10; 
             bufferSize[PIN] = 1.0 / (RPM / (30000000.0 * bufferSamples));
             if (bufferSize[PIN] > maxBuffSize) bufferSize[PIN] = maxBuffSize; 
@@ -132,7 +130,7 @@ public:
             trigger[PIN] = 1; 
         } 
         // micros() only called within interrupt, so timeout is required for 0
-        return (micros() - r_lastTick < timeOut) ? RPM / ((r_mode) ? r_sensors : 1) : 0;
+        return (micros() - r_lastTick < timeOut * 1000ul) ? RPM / ((r_mode) ? r_sensors : 1) : 0;
     }
     void buffer(int _size) {
         userBufferSize = _size * 1000ul;
@@ -148,6 +146,10 @@ public:
         r_pindex[r_avrPin(_old)] = 0; 
         pinMode(_new, INPUT);
         r_enable(_new);
+    }
+
+    void timeout(uint16_t _time) {
+        timeOut = _time; 
     }
 };
 
