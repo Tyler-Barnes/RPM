@@ -101,7 +101,6 @@ public:
 
     uint16_t get(uint8_t _pin = 0) {
         checkError(); // doesn't work inside pin() method for some reason
-
         // Calculate RPM
         uint8_t PIN = (r_mode) ? 0 : r_pindex[r_avrPin(_pin)];
         intMicros = r_intMicros; 
@@ -111,7 +110,7 @@ public:
         // Change buffer size based on calculated RPM
         float bufferSamples; 
         if (bufferMode == DYNAMIC) {
-            if (RPM > 20000) bufferSamples = 500; 
+            if (RPM > 20000) bufferSamples = 400; 
             else if (RPM > 10000) bufferSamples = 200; 
             else if (RPM > 5000) bufferSamples = 100; 
             else if (RPM > 500) bufferSamples = 50; 
@@ -132,9 +131,9 @@ public:
             active[PIN] ^= 1; 
             trigger[PIN] = 1; 
         } 
+        // micros() only called within interrupt, so timeout is required for 0
         return (micros() - r_lastTick < timeOut) ? ceil(RPM / ((r_mode) ? r_sensors : 1)) : 0;
     }
-
     void buffer(int _size) {
         userBufferSize = (uint32_t)_size * 1000ul;
         bufferMode = _size;  
@@ -142,7 +141,6 @@ public:
     void mode(uint8_t _mode) {
         r_mode = _mode; 
     }
-
     void redefine(uint8_t _old, uint8_t _new) {
         r_disable(_old);
         r_pin[r_pindex[r_avrPin(_old)]] = _new; 
