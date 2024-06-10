@@ -17,44 +17,44 @@
 
 void incRPM();
 
-#define construct_ISR(vect)         \
-    ISR(vect) {                     \
-        incRPM();                   \
+#define construct_ISR(vect) \
+    ISR(vect) {             \
+        incRPM();           \
     }
 
 #include <cores/cores.h>
 
-uint8_t r_pindex[r_nPins] = {0}; // pin's index into the cpms array;
+uint8_t r_pindex[r_nPins] = {0};    // pin's index into the cpus array; r_nPins defined in cores.h
 uint8_t r_mode = AGGREGATE; 
 uint8_t r_sensors = 0;  
-uint8_t r_pin[r_spaces] = {0};  // contains the pin number of active sensors
-uint8_t r_state[r_spaces] = {0}; // pin state after digitalRead in interrupt
+uint8_t r_pin[r_spaces] = {0};      // contains the pin number of active sensors
+uint8_t r_state[r_spaces] = {0};    // pin state after digitalRead in interrupt
 volatile uint32_t r_intMicros; 
 volatile uint32_t r_lastTick; 
-volatile uint32_t r_cpms0[r_spaces] = {0};
-volatile uint32_t r_cpms1[r_spaces] = {0};
-volatile uint32_t *r_cpms[2] = {r_cpms0, r_cpms1}; // index [][0] used for aggregate..
+volatile uint32_t r_cpus0[r_spaces] = {0};
+volatile uint32_t r_cpus1[r_spaces] = {0};
+volatile uint32_t *r_cpus[2] = {r_cpus0, r_cpus1}; // index [][0] used for aggregate..
 
 void incRPM() {                                                     
     r_intMicros = micros();                                             
     r_lastTick = micros();                                              
     if (r_mode == AGGREGATE) {                                          
-        r_cpms[0][0]++;                                                 
-        r_cpms[1][0]++;                                                 
+        r_cpus[0][0]++;                                                 
+        r_cpus[1][0]++;                                                 
     }else if (r_mode == SEPARATE) {                                     
         for (int i = 1; i <= r_sensors; i++) {                          
             uint8_t state = digitalRead(r_pin[i]);                     
             if (state != r_state[i]) {                              
                 r_state[i] = state;                                  
-                r_cpms[0][r_pindex[r_pin[i]]]++;                             
-                r_cpms[1][r_pindex[r_pin[i]]]++;                             
+                r_cpus[0][r_pindex[r_pin[i]]]++;                             
+                r_cpus[1][r_pindex[r_pin[i]]]++;                             
             }                                                           
         }                                                               
     }                                                                   
 }
 
 class RPMclass {
-public:
+private:
     int bufferMode = DYNAMIC; 
     uint8_t tooManySensors = 0;
     uint8_t trigger[r_spaces] = {0}; 
@@ -71,7 +71,7 @@ public:
     uint32_t *delta[2] = {delta1, delta2};
 
     void addPin(uint8_t _pin) {
-        r_sensors++; 
+        r_sensors++;    // skip index 0
         r_pin[r_sensors] = _pin;
         r_pindex[r_avrPin(_pin)] = r_sensors; 
     }
@@ -99,11 +99,11 @@ public:
     }
 
     uint16_t get(uint8_t _pin = 0) {
-        checkError(); // doesn't work in pin() method for some reason
+        checkError(); // doesn't work inside pin() method for some reason
         uint8_t PIN = (r_mode) ? 0 : r_pindex[r_avrPin(_pin)];
         intMicros = r_intMicros; 
         duration[active[PIN]][PIN] = (intMicros - delta[active[PIN]][PIN]);
-        RPM = ceil((double)(r_cpms[active[PIN]][PIN] * 30000000.0) / (double)duration[active[PIN]][PIN]);
+        RPM = ceil((double)(r_cpus[active[PIN]][PIN] * 30000000.0) / (double)duration[active[PIN]][PIN]);
         
         // Change buffer size based on calculated RPM
         float bufferSamples; 
@@ -115,14 +115,14 @@ public:
             else bufferSamples = 10; 
             bufferSize[PIN] = 1.0 / ((double)RPM / (30000000.0 * bufferSamples));
             if (bufferSize[PIN] > maxBuffSize) bufferSize[PIN] = maxBuffSize; 
-        }else {
+        } else {
             bufferSize[PIN] = userBufferSize; 
         }
 
-        // Split buffering allows cpms values to reset without any issues. 
+        // Split buffering allows cpus values to reset without any issues. 
         if (duration[active[PIN]][PIN] > bufferSize[PIN] / 2 && trigger[PIN]) {
             delta[active[PIN]^1][PIN] = intMicros;
-            r_cpms[active[PIN]^1][PIN] = 0; 
+            r_cpus[active[PIN]^1][PIN] = 0; 
             trigger[PIN] = 0; 
         }
         if (duration[active[PIN]][PIN] > bufferSize[PIN]) {
