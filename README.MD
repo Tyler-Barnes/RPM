@@ -242,7 +242,7 @@ void loop() {
 
 ```
 
-If you choose to use multiple sensors while also using `rpm_release_vectors`, make sure that the pins chosen are both on the same `PCINT_vector` so they occupy the `ISR()`. 
+If you choose to use multiple sensors while also using `rpm_release_vectors`, make sure that the pins chosen are both on the same `PCINT_vector` so they occupy the same `ISR()`. 
 
 
 
