@@ -196,7 +196,7 @@ Note that the library still needs some amount of time to accumulate samples, so 
 
 ### **`rpm_release_vectors`**
 
-The library automatically defines `ISR()` functions in order to keep track on the incoming data. In order to make the library as easy to use and as universal as possible, it pre-defines every pin change interrupt (`PCINTn_vect`) available. 
+The library automatically defines `ISR()` functions in order to keep track on the incoming data. In order to make the library easy to use and as universal as possible, it pre-defines every pin change interrupt (`PCINTn_vect`) available so that the user does not have to deal with setting up any interrupts. 
 
 If you try to define a `ISR()` function with a pin chanage interrupt, you will get an error explaining:
 
