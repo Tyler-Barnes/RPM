@@ -112,11 +112,15 @@ To set the buffer back to the default dynamic mode, pass the built in constant `
 RPM.buffer(DYNAMIC); 
 ```  
 
-### **An important note on performance and accuracy**
+### **An Important Note on Performance and Accuracy**
 
-Accuracy overall is about ±1%. There is some inaccuracy introduced by calling `micros()`, as well as by interrupts happening while calculations are made. 
+Accuracy overall is about ±1%, but some times there are fluctuations that appear that could be ±3%. There is some inaccuracy introduced by calling `micros()`, as well as by interrupts happening while calculations are made. 
+
+The slower you access `RPM.get()`, the more accurate the value will be. 
 
 Low RPM values are more difficult the measure than higher ones. There will ultimately be a lower limit at which data will start to break down the lower the RPM becomes. I have found that I can read down to 60RPM, but the time it takes to accumulate enough samples means that it takes some time to settle into the correct value. 
+
+The highest RPM the library supports is somewhere near 65,000. RPMs above that quickly became irratic so I decided to store the RPM value as a `uint16_t` since anything above that was unreliable anyway.  
 
 ### **Using Multiple Sensors**
 
