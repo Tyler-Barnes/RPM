@@ -116,6 +116,8 @@ RPM.buffer(DYNAMIC);
 
 Accuracy overall is about ±1%, but some times there are fluctuations that appear that could be ±3%. There is some inaccuracy introduced by calling `micros()`, as well as by interrupts happening while calculations are made. 
 
+Higher RPM values are generally more accurate than lower ones since there is more samples for a given amount of time. 
+
 The slower you access `RPM.get()`, the more accurate the value will be. 
 
 Low RPM values are more difficult the measure than higher ones. There will ultimately be a lower limit at which data will start to break down the lower the RPM becomes. I have found that I can read down to 60RPM, but the time it takes to accumulate enough samples means that it takes some time to settle into the correct value. 
