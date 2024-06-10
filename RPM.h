@@ -11,9 +11,10 @@
 #define DYNAMIC -1
 #define SEPARATE 0
 #define AGGREGATE 1
-#define r_arrSize 3
+#define r_arrSize 3     // {aggregate, separate1, separate2}
 #define maxBuffSize 5000000
 #define halt() while(1){}
+#define timeOut 1500000
 
 void incRPM();
 
@@ -24,24 +25,24 @@ void incRPM();
 
 #include <cores/cores.h>
 
-uint8_t r_pindex[r_nPins] = {0};    // pin's index into the cpus array; r_nPins defined in cores.h
+uint8_t r_pindex[r_nPins] = {0};                    // pin's index into the cpus array; r_nPins defined in cores.h
 uint8_t r_mode = AGGREGATE; 
 uint8_t r_sensors = 0;  
-uint8_t r_pin[r_arrSize] = {0};      // contains the pin number of active sensors
-uint8_t r_state[r_arrSize] = {0};    // pin state after digitalRead in interrupt
+uint8_t r_pin[r_arrSize] = {0};                     // contains the pin number of active sensors
+uint8_t r_state[r_arrSize] = {0};                   // pin state after digitalRead in interrupt
 volatile uint32_t r_intMicros; 
 volatile uint32_t r_lastTick; 
 volatile uint32_t r_cpus0[r_arrSize] = {0};
 volatile uint32_t r_cpus1[r_arrSize] = {0};
-volatile uint32_t *r_cpus[2] = {r_cpus0, r_cpus1}; // index [][0] used for aggregate..
+volatile uint32_t *r_cpus[2] = {r_cpus0, r_cpus1};  // index [][0] used for aggregate..
 
 void incRPM() {                                                     
-    r_intMicros = micros();                                             
+    r_intMicros = micros();    // psuedo input capture                                          
     r_lastTick = micros();                                              
     if (r_mode == AGGREGATE) {                                          
         r_cpus[0][0]++;                                                 
         r_cpus[1][0]++;                                                 
-    }else if (r_mode == SEPARATE) {                                     
+    } else if (r_mode == SEPARATE) {                                     
         for (int i = 1; i <= r_sensors; i++) {                          
             uint8_t state = digitalRead(r_pin[i]);                     
             if (state != r_state[i]) {                              
@@ -100,6 +101,8 @@ public:
 
     uint16_t get(uint8_t _pin = 0) {
         checkError(); // doesn't work inside pin() method for some reason
+
+        // Calculate RPM
         uint8_t PIN = (r_mode) ? 0 : r_pindex[r_avrPin(_pin)];
         intMicros = r_intMicros; 
         duration[active[PIN]][PIN] = (intMicros - delta[active[PIN]][PIN]);
@@ -129,7 +132,7 @@ public:
             active[PIN] ^= 1; 
             trigger[PIN] = 1; 
         } 
-        return (micros() - r_lastTick < 1500000) ? ceil(RPM / ((r_mode) ? r_sensors : 1)) : 0;
+        return (micros() - r_lastTick < timeOut) ? ceil(RPM / ((r_mode) ? r_sensors : 1)) : 0;
     }
 
     void buffer(int _size) {
