@@ -63,7 +63,7 @@ A list of the PCINT compatible pins is provided in the file named [`PCINT_Pins.M
 
 #### **`RPM.get()`** 
 
-The `RPM.get()` method returns a `uint32_t` containg the RPM value measured on the pin specified by `RPM.pin()`. 
+The `RPM.get()` method returns a `uint16_t` containg the RPM value measured on the pin specified by `RPM.pin()`. 
 
 ```c++
 #include <RPM.h>
