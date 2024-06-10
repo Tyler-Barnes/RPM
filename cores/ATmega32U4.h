@@ -4,7 +4,7 @@ construct_ISR(PCINT0_vect)
 
 const uint8_t r_nPins = 8; 
 
-void r_avrPin(uint8_t _pin) {
+uint8_t r_avrPin(uint8_t _pin) {
     switch(_pin) {
     case 8:
         return 0;
