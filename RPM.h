@@ -32,9 +32,9 @@ uint8_t r_pin[r_arrSize] = {0};                     // contains the pin number o
 uint8_t r_state[r_arrSize] = {0};                   // pin state after digitalRead in interrupt
 volatile uint32_t r_intMicros; 
 volatile uint32_t r_lastTick; 
-volatile uint32_t r_cpus0[r_arrSize] = {0};
-volatile uint32_t r_cpus1[r_arrSize] = {0};
-volatile uint32_t *r_cpus[2] = {r_cpus0, r_cpus1};  // index [][0] used for aggregate..
+volatile uint16_t r_cpus0[r_arrSize] = {0};
+volatile uint16_t r_cpus1[r_arrSize] = {0};
+volatile uint16_t *r_cpus[2] = {r_cpus0, r_cpus1};  // index [][0] used for aggregate..
 
 void incRPM() {                                                     
     r_intMicros = micros();    // psuedo input capture                                          
@@ -105,7 +105,7 @@ public:
         uint8_t PIN = (r_mode) ? 0 : r_pindex[r_avrPin(_pin)];
         intMicros = r_intMicros; 
         duration[active[PIN]][PIN] = (intMicros - delta[active[PIN]][PIN]);
-        RPM = ceil((double)(r_cpus[active[PIN]][PIN] * 30000000.0) / (double)duration[active[PIN]][PIN]);
+        RPM = (r_cpus[active[PIN]][PIN] * 30000000.0) / duration[active[PIN]][PIN];
         
         // Change buffer size based on calculated RPM
         float bufferSamples; 
@@ -115,7 +115,7 @@ public:
             else if (RPM > 5000) bufferSamples = 100; 
             else if (RPM > 500) bufferSamples = 50; 
             else bufferSamples = 10; 
-            bufferSize[PIN] = 1.0 / ((double)RPM / (30000000.0 * bufferSamples));
+            bufferSize[PIN] = 1.0 / (RPM / (30000000.0 * bufferSamples));
             if (bufferSize[PIN] > maxBuffSize) bufferSize[PIN] = maxBuffSize; 
         } else {
             bufferSize[PIN] = userBufferSize; 
@@ -132,10 +132,10 @@ public:
             trigger[PIN] = 1; 
         } 
         // micros() only called within interrupt, so timeout is required for 0
-        return (micros() - r_lastTick < timeOut) ? ceil(RPM / ((r_mode) ? r_sensors : 1)) : 0;
+        return (micros() - r_lastTick < timeOut) ? RPM / ((r_mode) ? r_sensors : 1) : 0;
     }
     void buffer(int _size) {
-        userBufferSize = (uint32_t)_size * 1000ul;
+        userBufferSize = _size * 1000ul;
         bufferMode = _size;  
     }
     void mode(uint8_t _mode) {
