@@ -2,13 +2,13 @@
 
 **Written by:** _Tyler Barnes_. 
 
-### **What is the RPM library?**
+### **What is the RPM Library?**
 
 The RPM.h library was created to make it incredibly easy to read RPM sensors. Simply specify a PCINT capable pin, and start reading data. 
 
 
 
-### **How to install it**
+### **How to Install It**
 
 #### **Method 1** _(Recommended)_
 To install the library, click on the `Sketch` tab within the Arduino IDE, click on `Include Library`, then click on `Manage Libraries...`. 
@@ -23,7 +23,7 @@ Once the .zip file has been downloaded, click on the `Sketch` tab within the Ard
 The resulting dialog will allow you to locate the library within your computer's directories, and open it. 
 
 
-### **How to use it**
+### **How To Use It**
 To add its functionality to your sketch you'll need to reference the library header file. You do this by adding an include directive to the top of your sketch.
 
 ```c++
@@ -41,7 +41,7 @@ void loop(){
 
 The library provides a global variable named `RPM`, you use this variable to access the library's methods. The methods provided in the RPM class are listed below.
 
-### **Library functions**
+### **Library Functions**
 
 #### **`RPM.pin(pin)`** 
 
@@ -78,7 +78,7 @@ void loop(){
 }
 ```
 
-### **Advanced features**
+### **Advanced Features**
 
 #### **`RPM.buffer(int value)`** 
 
@@ -112,9 +112,9 @@ To set the buffer back to the default dynamic mode, pass the built in constant `
 RPM.buffer(DYNAMIC); 
 ```  
 
-### **An Important Note on Performance and Accuracy**
+#### **An Important Note on Performance and Accuracy**
 
-Accuracy overall is about ±1%, but some times there are fluctuations that appear that could be ±3%. There is some inaccuracy introduced by calling `micros()`, as well as by interrupts happening while calculations are made. 
+Accuracy overall is about ±1%, but sometimes there are fluctuations that appear that could be ±3%. There is some inaccuracy introduced by calling `micros()`, as well as by interrupts happening while calculations are made. 
 
 Higher RPM values are generally more accurate than lower ones since there is more samples for a given amount of time. 
 
@@ -124,7 +124,7 @@ Low RPM values are more difficult the measure than higher ones. There will ultim
 
 The highest RPM the library supports is somewhere near 65,000. RPMs above that quickly became irratic so I decided to store the RPM value as a `uint16_t` since anything above that was unreliable anyway.  
 
-### **Using Multiple Sensors**
+#### **Using Multiple Sensors**
 
 You can get a marginal improvement to performance by using multiple sensors. 
 
@@ -150,7 +150,7 @@ void loop(){
 
 #### **`RPM.mode(uint8_t mode)`** 
 
-By default, the mode of operation is set to `AGGREGATE`. This will read in multiple sensors in order to gain more samples per revlution. 
+By default, the mode of operation is set to `AGGREGATE`. This will read in multiple sensors in order to gain more samples per revolution. 
 
 If you instead want to read the RPM of two separate sources, then you can set the running mode to `SEPARATE`. 
 
@@ -194,7 +194,7 @@ RPM.redefine(5, 7);
 
 Note that the library still needs some amount of time to accumulate samples, so you will not be able to switch between pins back and forth rapidly and expect the values to behave properly. 
 
-### **`rpm_release_vectors`**
+#### **`rpm_release_vectors`**
 
 The library automatically defines `ISR()` functions in order to keep track on the incoming data. In order to make the library easy to use and as universal as possible, it pre-defines every pin change interrupt (`PCINTn_vect`) available so that the user does not have to deal with setting up any interrupts. 
 
