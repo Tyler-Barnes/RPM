@@ -112,27 +112,6 @@ To set the buffer back to the default dynamic mode, pass the built in constant `
 RPM.buffer(DYNAMIC); 
 ```  
 
-#### **`RPM.samples(int value)`**
-
-The library supports sample averaging. If you would like to use a rolling average on the last returned RPM values, you can specify the number of samples you'd like to capture and avergate together.
-
-```c++
-#include <RPM.h>
-
-void setup(){
-    Serial.begin(9600); 
-    RPM.pin(3); 
-    RPM.buffer(DYNAMIC);
-    RPM.samples(5);  
-}
-
-void loop(){
-    Serial.println(RPM.get());
-}
-```
-
-`RPM.samples()` is set to `DYNAMIC` by default, which increases the avgeraging for lower RPMs and decreases it for higher RPMs. 
-
 ### **An important note on performance and accuracy**
 
 Accuracy overall is about ±1%. There is some inaccuracy introduced by calling `micros()`, as well as by interrupts happening while calculations are made. 
@@ -142,6 +121,8 @@ Low RPM values are more difficult the measure than higher ones. There will ultim
 ### **Using Multiple Sensors**
 
 You can get a marginal improvement to performance by using multiple sensors. 
+
+The library supports two sensors. (If you try to assign more than two, the program will halt)
 
 The placement of the second sensor is important for accuracy. I suggest placing a second sensor 180° out of phase with the first one. This means if you are measuring a rotating object, then one sensor would be on either side. 
 
@@ -160,6 +141,52 @@ void loop(){
     Serial.println(RPM.get());
 }
 ```
+
+#### **`RPM.mode(uint8_t mode)`** 
+
+By default, the mode of operation is set to `AGGREGATE`. This will read in multiple sensors in order to gain more samples per revlution. 
+
+If you instead want to read the RPM of two separate sources, then you can set the running mode to `SEPARATE`. 
+
+```c++
+#include <RPM.h>
+
+void setup(){
+    Serial.begin(9600); 
+    RPM.mode(SEPARATE); 
+    RPM.pin(3); 
+    RPM.pin(5); 
+}
+```
+In order to get the RPM values, pass the pin number into the `RPM.get()` method. 
+
+```c++
+#include <RPM.h>
+
+void setup(){
+    Serial.begin(9600); 
+    RPM.mode(SEPARATE); 
+    RPM.pin(3); 
+    RPM.pin(5); 
+}
+
+void loop() {
+    Serial.println(RPM.get(3));
+    Serial.println(RPM.get(5));
+}
+```
+
+#### **`RPM.redefine(uint8_t oldPin, uint8_t newPin)`** 
+
+If you need to dynamically change the pin you want to read using the library, you can redefine a sensor pin using `RPM.redefine()`. 
+
+Pass the pin you want to disable into the first argument, and the pin you want to enable into the second. 
+
+```c++
+RPM.redefine(5, 7);
+```
+
+Note that the library still needs some amount of time to accumulate samples, so you will not be able to switch between pins back and forth rapidly and expect the values to behave properly. 
 
 ### **`rpm_release_vectors`**
 

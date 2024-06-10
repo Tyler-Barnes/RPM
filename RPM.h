@@ -8,19 +8,14 @@
 #ifndef RPM_h
 #define RPM_h
 
-uint8_t r_nSensors = 0;  
-volatile uint32_t r_intMicros; 
-volatile uint32_t r_lastTick; 
-volatile uint32_t r_cpms1 = 0;
-volatile uint32_t r_cpms2 = 0;
-volatile uint32_t *r_cpms[2] = {&r_cpms1, &r_cpms2};
 #define DYNAMIC -1
+#define SEPARATE 0
+#define AGGREGATE 1
+#define r_spaces 3
+#define maxBuffSize 5000000
+#define halt() while(1){}
 
-#define incRPM() {          \
-    r_intMicros = micros(); \
-    r_cpms1++; r_cpms2++;   \
-    r_lastTick = micros();  \
-}
+void incRPM();
 
 #define construct_ISR(vect)         \
     ISR(vect) {                     \
@@ -29,95 +24,131 @@ volatile uint32_t *r_cpms[2] = {&r_cpms1, &r_cpms2};
 
 #include <cores/cores.h>
 
+uint8_t r_pindex[r_nPins] = {0}; // pin's index into the cpms array;
+uint8_t r_mode = AGGREGATE; 
+uint8_t r_sensors = 0;  
+uint8_t r_instances = 0;  
+uint8_t r_pin[r_spaces] = {0};  // contains the pin number of active sensors
+uint8_t r_state[r_spaces] = {0}; // pin state after digitalRead in interrupt
+volatile uint32_t r_intMicros; 
+volatile uint32_t r_lastTick; 
+volatile uint32_t r_cpms0[r_spaces] = {0};
+volatile uint32_t r_cpms1[r_spaces] = {0};
+volatile uint32_t *r_cpms[2] = {r_cpms0, r_cpms1}; // index [][0] used for aggregate..
+
+void incRPM() {                                                     
+    r_intMicros = micros();                                             
+    r_lastTick = micros();                                              
+    if (r_mode == AGGREGATE) {                                          
+        r_cpms[0][0]++;                                                 
+        r_cpms[1][0]++;                                                 
+    }else if (r_mode == SEPARATE) {                                     
+        for (int i = 1; i <= r_sensors; i++) {                          
+            uint8_t state = digitalRead(r_pin[i]);                     
+            if (state != r_state[i]) {                              
+                r_state[i] = state;                                  
+                r_cpms[0][r_pindex[r_pin[i]]]++;                             
+                r_cpms[1][r_pindex[r_pin[i]]]++;                             
+            }                                                           
+        }                                                               
+    }                                                                   
+}
+
 class RPMclass {
 public:
     int bufferMode = DYNAMIC; 
-    int sampleMode = DYNAMIC;   
-    uint8_t nSamples;
+    uint8_t tooManySensors = 0;
     uint8_t index = 0;
-    uint8_t trigger = 1; 
-    uint8_t active = 0;
-    uint16_t aSamples[100] = {0};
-    uint32_t bufferSize = 0;    
-    uint32_t delta1 = 0; 
-    uint32_t delta2 = 0; 
-    uint32_t *aDelta [2] = {&delta1, &delta2}; 
-    uint32_t duration1, duration2; 
-    uint32_t *duration[2] = {&duration1, &duration2};
-    uint32_t RPM;
+    uint8_t trigger[r_spaces] = {0}; 
+    uint8_t active[r_spaces] = {0};
+    uint16_t RPM;
+    uint32_t cpms;
     uint32_t intMicros;
+    uint32_t userBufferSize = 0; 
+    uint32_t bufferSize[r_spaces] = {0};    
+    uint32_t duration1[r_spaces] = {0}; 
+    uint32_t duration2[r_spaces] = {0}; 
+    uint32_t *duration[2] = {duration1, duration2};
+    uint32_t delta1[r_spaces] = {0}; 
+    uint32_t delta2[r_spaces] = {0}; 
+    uint32_t *delta[2] = {delta1, delta2};
 
-    void addSample(uint16_t _sample) {
-        if (++index > nSamples) index = 0;
-        aSamples[index] = _sample;
+    void addPin(uint8_t _pin) {
+        r_sensors++; 
+        r_pin[r_sensors] = _pin;
+        r_pindex[r_avrPin(_pin)] = r_sensors; 
     }
 
-    double avgSamples() {
-        uint32_t sum = 0;
-        for (int i = 0; i < nSamples; i++) {
-            sum += aSamples[i]; 
-        }
-        return (double)sum / (double)nSamples; 
-    }
-
-    void fillArr(uint32_t _rpm) {
-        for (int i = 0; i < nSamples; i++) {
-            aSamples[i] = _rpm; 
-        }
+    void checkError() {
+        if (tooManySensors) {
+            char buff[10]; 
+            sprintf(buff, "\nMaximum number of sensors is %d.\n", r_spaces - 1);
+            Serial.end();
+            Serial.begin(9600);
+            Serial.print(buff);
+            halt();  
+        }; 
     }
 
 public:
     void pin(uint8_t _pin) {
-        r_nSensors++; 
+        if (r_sensors >= r_spaces - 1) {
+            tooManySensors = 1;
+            return;
+        }
+        addPin(_pin);
         pinMode(_pin, INPUT);
-        r_setup(_pin);
+        r_enable(_pin);
     }
 
-    uint32_t get() {
+    uint16_t get(uint8_t _pin = 0) {
+        checkError(); 
+        uint8_t PIN = (r_mode) ? 0 : r_pindex[r_avrPin(_pin)];
         intMicros = r_intMicros; 
-        *duration[active] = (intMicros - *aDelta[active]);
-        RPM = ceil((double)(*r_cpms[active] * 30000000.0) / (double)*duration[active]);
-        if (avgSamples() == 0) {
-            fillArr(RPM); 
-        } else {
-            addSample(RPM); 
-        }
-        float bufferScale; 
+        duration[active[PIN]][PIN] = (intMicros - delta[active[PIN]][PIN]);
+        cpms = r_cpms[active[PIN]][PIN]; 
+        RPM = ceil((double)(cpms * 30000000.0) / (double)duration[active[PIN]][PIN]);
+        
+        float bufferSamples; 
         if (bufferMode == DYNAMIC) {
-            if (RPM > 20000) bufferScale = 500; 
-            else if (RPM > 10000) bufferScale = 200; 
-            else if (RPM > 5000) bufferScale = 100; 
-            else if (RPM > 500) bufferScale = 50; 
-            else bufferScale = 15; 
-            bufferSize = 1.0 / ((double)RPM / (30000000.0 * bufferScale));
+            if (RPM > 20000) bufferSamples = 500; 
+            else if (RPM > 10000) bufferSamples = 200; 
+            else if (RPM > 5000) bufferSamples = 100; 
+            else if (RPM > 500) bufferSamples = 50; 
+            else bufferSamples = 10; 
+            bufferSize[PIN] = 1.0 / ((double)RPM / (30000000.0 * bufferSamples));
+            if (bufferSize[PIN] > maxBuffSize) bufferSize[PIN] = maxBuffSize; 
+        }else {
+            bufferSize[PIN] = userBufferSize; 
         }
 
-        if (sampleMode == DYNAMIC) {
-            if (RPM > 5000) nSamples = 3;
-            else if (RPM > 250) nSamples = 5;
-            else nSamples = 8;
+        if (duration[active[PIN]][PIN] > bufferSize[PIN] / 2 && trigger[PIN]) {
+            delta[active[PIN]^1][PIN] = intMicros;
+            r_cpms[active[PIN]^1][PIN] = 0; 
+            trigger[PIN] = 0; 
         }
-
-        if (*duration[active] > bufferSize / 2 && trigger) {
-            *aDelta[active^1] = intMicros;
-            *r_cpms[active^1] = 0; 
-            trigger = 0; 
-        }
-        if (*duration[active] > bufferSize) {
-            active ^= 1; 
-            trigger = 1; 
+        if (duration[active[PIN]][PIN] > bufferSize[PIN]) {
+            active[PIN] ^= 1; 
+            trigger[PIN] = 1; 
         } 
-        return (micros() - r_lastTick < 1500000) ? ceil(avgSamples() / r_nSensors) : 0;
-    }
-
-    void samples(int _samples) {
-        nSamples = _samples;
-        sampleMode = _samples;  
+        return (micros() - r_lastTick < 1500000) ? ceil(RPM / ((r_mode) ? r_sensors : 1)) : 0;
     }
 
     void buffer(int _size) {
-        bufferSize = (uint32_t)_size * 1000ul;
+        userBufferSize = (uint32_t)_size * 1000ul;
         bufferMode = _size;  
+    }
+    void mode(uint8_t _mode) {
+        r_mode = _mode; 
+    }
+
+    void redefine(uint8_t _old, uint8_t _new) {
+        r_disable(_old);
+        r_pin[r_pindex[r_avrPin(_old)]] = _new; 
+        r_pindex[r_avrPin(_new)] = r_pindex[r_avrPin(_old)]; 
+        r_pindex[r_avrPin(_old)] = 0; 
+        pinMode(_new, INPUT);
+        r_enable(_new);
     }
 };
 
