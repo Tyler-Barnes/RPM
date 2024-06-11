@@ -117,10 +117,10 @@ public:
             if (RPM > 5000) bufferSamples = 50; 
             else if (RPM > 500) bufferSamples = 25; 
             else bufferSamples = 10; 
-                samples2Buffer(); 
+            samples2Buffer(); 
             if (bufferSize[PIN] > maxBuffSize) bufferSize[PIN] = maxBuffSize; 
         } else if (bufferMode == SAMPLES) {
-                samples2Buffer(); 
+            samples2Buffer(); 
         } else {
             bufferSize[PIN] = userBufferSize; 
         }
