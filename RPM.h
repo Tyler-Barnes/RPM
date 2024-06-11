@@ -108,26 +108,32 @@ public:
         lastRPM = RPM; 
     }
 
+    void samples2Buffer() {
+        bufferSize[PIN] = 1.0 / (RPM / (30000000.0 * bufferSamples));
+    }
+
     void calcBuffer() {
         if (bufferMode == DYNAMIC) {
             if (RPM > 5000) bufferSamples = 50; 
             else if (RPM > 500) bufferSamples = 25; 
             else bufferSamples = 10; 
-            bufferSize[PIN] = 1.0 / (RPM / (30000000.0 * bufferSamples));
+                samples2Buffer(); 
             if (bufferSize[PIN] > maxBuffSize) bufferSize[PIN] = maxBuffSize; 
         } else if (bufferMode == SAMPLES) {
-            bufferSize[PIN] = 1.0 / (RPM / (30000000.0 * bufferSamples));
+                samples2Buffer(); 
         } else {
             bufferSize[PIN] = userBufferSize; 
         }
     }
 
     void splitBuffer() {
+        // if duration has past half the buffer size, reset the background buffer
         if (duration[active[PIN]][PIN] > bufferSize[PIN] / 2 && trigger[PIN]) {
             delta[active[PIN]^1][PIN] = intMicros;
             r_ticks[active[PIN]^1][PIN] = 0; 
             trigger[PIN] = 0; 
         }
+        // if the duration has past the bufferSize, set current buffer to background, and set background buffer to active
         if (duration[active[PIN]][PIN] > bufferSize[PIN]) {
             active[PIN] ^= 1; 
             trigger[PIN] = 1; 
