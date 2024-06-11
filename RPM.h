@@ -88,6 +88,37 @@ private:
         }; 
     }
 
+    void calcRPM() {
+        intMicros = r_intMicros; 
+        duration[active[PIN]][PIN] = (intMicros - delta[active[PIN]][PIN]);
+        RPM = (r_cpus[active[PIN]][PIN] * 30000000.0) / duration[active[PIN]][PIN];
+    }
+
+    void calcBuffer() {
+        float bufferSamples; 
+        if (bufferMode == DYNAMIC) {
+            if (RPM > 5000) bufferSamples = 25; 
+            else if (RPM > 500) bufferSamples = 15; 
+            else bufferSamples = 10; 
+            bufferSize[PIN] = 1.0 / (RPM / (30000000.0 * bufferSamples));
+            if (bufferSize[PIN] > maxBuffSize) bufferSize[PIN] = maxBuffSize; 
+        } else {
+            bufferSize[PIN] = userBufferSize; 
+        }
+    }
+
+    void splitBuffer() {
+        if (duration[active[PIN]][PIN] > bufferSize[PIN] / 2 && trigger[PIN]) {
+            delta[active[PIN]^1][PIN] = intMicros;
+            r_cpus[active[PIN]^1][PIN] = 0; 
+            trigger[PIN] = 0; 
+        }
+        if (duration[active[PIN]][PIN] > bufferSize[PIN]) {
+            active[PIN] ^= 1; 
+            trigger[PIN] = 1; 
+        } 
+    }
+
 public:
     void pin(uint8_t _pin) {
         if (r_sensors >= r_arrSize - 1) {
@@ -103,32 +134,12 @@ public:
         checkError(); // doesn't work inside pin() method for some reason
         // Calculate RPM
         uint8_t PIN = (r_mode) ? 0 : r_pindex[r_avrPin(_pin)];
-        intMicros = r_intMicros; 
-        duration[active[PIN]][PIN] = (intMicros - delta[active[PIN]][PIN]);
-        RPM = (r_cpus[active[PIN]][PIN] * 30000000.0) / duration[active[PIN]][PIN];
+        calcRPM(); 
         
         // Change buffer size based on calculated RPM
-        float bufferSamples; 
-        if (bufferMode == DYNAMIC) {
-            if (RPM > 5000) bufferSamples = 25; 
-            else if (RPM > 500) bufferSamples = 15; 
-            else bufferSamples = 10; 
-            bufferSize[PIN] = 1.0 / (RPM / (30000000.0 * bufferSamples));
-            if (bufferSize[PIN] > maxBuffSize) bufferSize[PIN] = maxBuffSize; 
-        } else {
-            bufferSize[PIN] = userBufferSize; 
-        }
-
+        calcBuffer();
         // Split buffering allows cpus values to reset without any issues. 
-        if (duration[active[PIN]][PIN] > bufferSize[PIN] / 2 && trigger[PIN]) {
-            delta[active[PIN]^1][PIN] = intMicros;
-            r_cpus[active[PIN]^1][PIN] = 0; 
-            trigger[PIN] = 0; 
-        }
-        if (duration[active[PIN]][PIN] > bufferSize[PIN]) {
-            active[PIN] ^= 1; 
-            trigger[PIN] = 1; 
-        } 
+        splitBuffer(); 
         // micros() only called within interrupt, so timeout is required for 0
         return (micros() - r_lastTick < timeOut * 1000ul) ? RPM / ((r_mode) ? r_sensors : 1) : 0;
     }
