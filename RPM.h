@@ -135,7 +135,6 @@ public:
         // Calculate RPM
         uint8_t PIN = (r_mode) ? 0 : r_pindex[r_avrPin(_pin)];
         calcRPM(); 
-        
         // Change buffer size based on calculated RPM
         calcBuffer();
         // Split buffering allows cpus values to reset without any issues. 
