@@ -5,6 +5,14 @@
     No warranty expressed or implied.
  */
 
+/*
+r_pin[] holds the avr pin number of a defined sensor; r_pin[0] is reserved.
+r_pindex[] is an array that holds the index into r_pin
+r_sensors gets incremented when a new RPM.pin() is defined; it becomes the index value held in r_pindex
+r_state[] holds the last measured pin state by digitalRead() within the interrupt
+r_avrPin() takes in an avr pin number and returns the index into r_pindex
+*/
+
 #ifndef RPM_h
 #define RPM_h
 
@@ -13,7 +21,7 @@
 #define SEPARATE 0
 #define AGGREGATE 1
 #define r_arrSize 3     // {aggregate, separate1, separate2}
-#define maxBuffSize 500000
+#define maxBuffSize 1000000
 #define halt() while(1){}
 
 void incRPM();
@@ -34,7 +42,7 @@ volatile uint32_t r_intMicros;
 volatile uint32_t r_lastTick; 
 volatile uint16_t r_ticks0[r_arrSize] = {0};
 volatile uint16_t r_ticks1[r_arrSize] = {0};
-volatile uint16_t *r_ticks[2] = {r_ticks0, r_ticks1};  // index [][0] used for aggregate..
+volatile uint16_t *r_ticks[2] = {r_ticks0, r_ticks1};  // r_ticks[x][0] used for aggregate..
 
 void incRPM() {                                                     
     r_intMicros = micros();    // psuedo input capture                                          
@@ -53,6 +61,14 @@ void incRPM() {
         }                                                               
     }                                                                   
 }
+
+#define r_pindex(x) r_pindex[r_avrPin(x)]
+#define r_pin(x) r_pin[r_pindex[r_avrPin(x)]]
+#define r_duration duration[active[PIN]][PIN]
+#define r_activeDelta delta[active[PIN]][PIN]
+#define r_inactiveDelta delta[active[PIN]^1][PIN]
+#define r_activeTicks r_ticks[active[PIN]][PIN]
+#define r_inactiveTicks r_ticks[active[PIN]^1][PIN]
 
 class RPMclass {
 public:
@@ -77,9 +93,9 @@ public:
 
 
     void addPin(uint8_t _pin) {
-        r_sensors++;    // skip index 0
-        r_pin[r_sensors] = _pin;
-        r_pindex[r_avrPin(_pin)] = r_sensors; 
+        r_sensors++;                // skip index 0
+        r_pin[r_sensors] = _pin;    
+        r_pindex(_pin) = r_sensors; 
     }
 
     void checkError() {
@@ -94,9 +110,9 @@ public:
     }
 
     void calcRPM() {
-        intMicros = r_intMicros; 
-        duration[active[PIN]][PIN] = (intMicros - delta[active[PIN]][PIN]);
-        RPM = (r_ticks[active[PIN]][PIN] * 30000000.0) / duration[active[PIN]][PIN];
+        intMicros = r_intMicros; // r_intMicros can get changed by interrupt before calculation is made
+        r_duration = (intMicros - r_activeDelta);
+        RPM = (r_activeTicks * 30000000.0) / r_duration;
     }
 
     void incTimeout() {
@@ -108,19 +124,15 @@ public:
         lastRPM = RPM; 
     }
 
-    void samples2Buffer() {
-        bufferSize[PIN] = 1.0 / (RPM / (30000000.0 * bufferSamples));
-    }
-
     void calcBuffer() {
         if (bufferMode == DYNAMIC) {
             if (RPM > 5000) bufferSamples = 50; 
             else if (RPM > 500) bufferSamples = 25; 
             else bufferSamples = 10; 
-            samples2Buffer(); 
+            bufferSize[PIN] = 1.0 / (RPM / (30000000.0 * bufferSamples));
             if (bufferSize[PIN] > maxBuffSize) bufferSize[PIN] = maxBuffSize; 
         } else if (bufferMode == SAMPLES) {
-            samples2Buffer(); 
+            bufferSize[PIN] = 1.0 / (RPM / (30000000.0 * bufferSamples));
         } else {
             bufferSize[PIN] = userBufferSize; 
         }
@@ -128,13 +140,13 @@ public:
 
     void splitBuffer() {
         // if duration has past half the buffer size, reset the background buffer
-        if (duration[active[PIN]][PIN] > bufferSize[PIN] / 2 && trigger[PIN]) {
-            delta[active[PIN]^1][PIN] = intMicros;
-            r_ticks[active[PIN]^1][PIN] = 0; 
+        if (r_duration > bufferSize[PIN] / 2 && trigger[PIN]) {
+            r_inactiveDelta = intMicros;
+            r_inactiveTicks = 0; 
             trigger[PIN] = 0; 
         }
         // if the duration has past the bufferSize, set current buffer to background, and set background buffer to active
-        if (duration[active[PIN]][PIN] > bufferSize[PIN]) {
+        if (r_duration > bufferSize[PIN]) {
             active[PIN] ^= 1; 
             trigger[PIN] = 1; 
         } 
@@ -152,17 +164,15 @@ public:
 
     uint16_t get(uint8_t _pin = 0) {
         checkError(); // doesn't work inside pin() method for some reason
-        PIN = (r_mode) ? 0 : r_pindex[r_avrPin(_pin)];
+        PIN = (r_mode) ? 0 : r_pindex(_pin);
         // Calculate RPM
         calcRPM(); 
-        // If interrupt stops firing, value is 0.
-        incTimeout(); 
         // Change buffer size based on calculated RPM
         calcBuffer();
         // Split buffering allows ticks values to reset without any issues. 
         splitBuffer();
         // micros() only called within interrupt, so timeout is required for 0
-        return (timeOut < 10) ? RPM / ((r_mode) ? r_sensors : 1) : 0;
+        return (micros() - r_lastTick < bufferSize[PIN]) ? RPM / ((r_mode) ? r_sensors : 1) : 0;
     }
     void buffer(int _size) {
         userBufferSize = _size * 1000ul;
@@ -171,11 +181,12 @@ public:
     void mode(uint8_t _mode) {
         r_mode = _mode; 
     }
+
     void redefine(uint8_t _old, uint8_t _new) {
         r_disable(_old);
-        r_pin[r_pindex[r_avrPin(_old)]] = _new; 
-        r_pindex[r_avrPin(_new)] = r_pindex[r_avrPin(_old)]; 
-        r_pindex[r_avrPin(_old)] = 0; 
+        r_pin(_old) = _new; 
+        r_pindex(_new) = r_pindex(_old); 
+        r_pindex(_old)  = 0; 
         pinMode(_new, INPUT);
         r_enable(_new);
     }
