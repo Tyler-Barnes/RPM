@@ -79,7 +79,7 @@ public:
     uint8_t active[r_arrSize] = {0};
     uint16_t RPM;
     uint16_t lastRPM;
-    uint16_t timeOut = 0;
+    uint16_t timeOut = 1000;
     uint32_t intMicros;
     uint32_t userBufferSize = 0; 
     uint32_t bufferSize[r_arrSize] = {0};    
@@ -113,15 +113,6 @@ public:
         intMicros = r_intMicros; // r_intMicros can get changed by interrupt before calculation is made
         r_duration = (intMicros - r_activeDelta);
         RPM = (r_activeTicks * 30000000.0) / r_duration;
-    }
-
-    void incTimeout() {
-        if (RPM == lastRPM) {
-            timeOut++;
-        } else {
-            timeOut = 0; 
-        }
-        lastRPM = RPM; 
     }
 
     void calcBuffer() {
@@ -172,10 +163,11 @@ public:
         // Split buffering allows ticks values to reset without any issues. 
         splitBuffer();
         // micros() only called within interrupt, so timeout is required for 0
-        return (micros() - r_lastTick < bufferSize[PIN]) ? RPM / ((r_mode) ? r_sensors : 1) : 0;
+        uint32_t lastUpdate = micros() - r_lastTick; 
+        return (lastUpdate < timeOut * 1000ul && lastUpdate < bufferSize[PIN]) ? RPM / ((r_mode) ? r_sensors : 1) : 0;
     }
     void buffer(int _size) {
-        userBufferSize = _size * 1000ul;
+        userBufferSize = _size;
         bufferMode = _size;  
     }
     void mode(uint8_t _mode) {
@@ -194,6 +186,10 @@ public:
     void samples(uint8_t _samples) {
         bufferMode = SAMPLES; 
         bufferSamples = _samples; 
+    }
+
+    void timeout(uint16_t _time) {
+        timeOut = _time * 1000ul;
     }
 };
 
