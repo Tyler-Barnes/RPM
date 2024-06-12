@@ -163,7 +163,7 @@ public:
         // Split buffering allows ticks values to reset without any issues. 
         splitBuffer();
         // micros() only called within interrupt, so timeout is required for 0
-        uint32_t lastUpdate = micros() - r_lastTick; 
+        #define lastUpdate micros() - r_lastTick 
         return (lastUpdate < timeOut * 1000ul && lastUpdate < bufferSize[PIN]) ? RPM / ((r_mode) ? r_sensors : 1) : 0;
     }
     void buffer(int _size) {
