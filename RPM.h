@@ -189,7 +189,7 @@ public:
     }
 
     void timeout(uint16_t _time) {
-        timeOut = _time * 1000ul;
+        timeOut = _time;
     }
 };
 
