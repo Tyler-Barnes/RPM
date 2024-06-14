@@ -41,9 +41,9 @@ The resulting dialog will allow you to locate the library within your computer's
 ### **Hookup Instructions**
 The input capture method uses very specific pins on the Arduino. They usually do not overlap other powerful functions though. 
 
-On the Uno, or Nano, the input capture pin is 8. 
-On the Leonardo, Or Sparkfun Pro Micro, the input capture pin is 4. 
-On the Mega the input capture pin used is pin 48.
+- On the Uno, or Nano, the input capture pin is 8. 
+- On the Leonardo, Or Sparkfun Pro Micro, the input capture pin is 4. 
+- On the Mega the input capture pin used is pin 48.
 
 ### **How To Use It**
 To add its functionality to your sketch you'll need to reference the library header file. You do this by adding an include directive to the top of your sketch.
