@@ -20,7 +20,7 @@ Lastly, the library does not take away the External Interrupts from the user. So
 
 ### **What are the Drawbacks?**
 
-The library uses Timer1 on the UNO and Nano, so you will no longer be able to call `analogWrite()` on pins 9 or 10.
+The library uses Timer1 on the UNO, Nano, Leonardo, and Sparkfun Pro Micro so you will no longer be able to call `analogWrite()` on pins 9 or 10.
 
 The library uses Timer4 on the Mega, so you will no longer be able to call `analogWrite()` on pins 6, 7, or 8. 
 
