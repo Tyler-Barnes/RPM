@@ -39,8 +39,6 @@ The resulting dialog will allow you to locate the library within your computer's
 ### **Hookup Instructions**
 The input capture method uses very specific pins on the Arduino. They usually do not overlap other powerful functions though. 
 
-A list of the input capture pins can be found in the file `InputCapturePins.MD`. 
-
 On the Uno, or Nano, the input capture pin is 8. 
 On the Leonardo the input capture pin is 4. 
 
