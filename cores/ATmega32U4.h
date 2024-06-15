@@ -1,3 +1,4 @@
+#define r_capture ICP1
 
 uint16_t r_PRSCLR = 64; 
 
@@ -17,10 +18,10 @@ ISR(TIMER1_OVF_vect) {
 }
 
 void r_ic() {
-    CLKPR = 0x80;   // no CPU prscaler
-    TIMSK1 = 0x21;  // enable input capture interrupt; enable overflow interrupt
-    TCCR1A = 0x00;  // clear any previous configuration
-    TCCR1B = 0x03;  // set prescaler
-    pinMode(4, INPUT);
+    CLKPR = 0x80;           // no CPU prscaler
+    TIMSK1 = 0x21;          // enable input capture interrupt; enable overflow interrupt
+    TCCR1A = 0x00;          // clear any previous configuration
+    TCCR1B = 0x03;          // set prescaler
+    DDRD &= ~(_BV(PD4));    // pinMode(4, INPUT);
 }
 

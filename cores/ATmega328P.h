@@ -1,4 +1,6 @@
 
+#define r_capture ICP1
+
 uint16_t r_PRSCLR = 64; 
 
 ISR(TIMER1_CAPT_vect) {
