@@ -1,6 +1,6 @@
-#define r_PRSCLR 64
-#define hz2us 1000000 / (F_CPU / r_PRSCLR)
-#define r_rpm(x) 60000000 / (hz2us * x)
+#define r_prsclr 64
+#define r_hz2us 1000000 / (F_CPU / r_prsclr)
+#define r_rpm(x) 60000000 / (r_hz2us * x)
 
 volatile uint8_t r_timeOut = 0;
 volatile uint16_t r_reset = 0;
