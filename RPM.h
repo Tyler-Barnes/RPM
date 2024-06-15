@@ -13,8 +13,8 @@ volatile uint16_t r_reset = 0;
 #include <cores/cores.h>
 
 #define clkError 1.0005
-#define hz2us (1.0 / (F_CPU * clkError / r_PRSCLR)) * 1000000
-#define cpus(x) 1.0 / (hz2us * x)
+#define hz2us 1000000 / (F_CPU * clkError / r_PRSCLR)
+#define r_rpm(x) 60000000 / (hz2us * x)
 
 class RPMclass{
 public:
@@ -23,7 +23,7 @@ public:
     }  
 
     uint16_t get() {
-        return (r_timeOut) ? 0 : cpus(r_capture) * 60000000;
+        return (r_timeOut) ? 0 : r_rpm(r_capture);
     }
 };
 

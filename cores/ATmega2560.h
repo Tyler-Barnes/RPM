@@ -1,5 +1,5 @@
 
-#define r_capture ICP4
+#define r_capture ICR4
 
 uint16_t r_PRSCLR = 64; 
 
