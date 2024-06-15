@@ -19,10 +19,10 @@ ISR(TIMER1_OVF_vect) {
 }
 
 void r_ic() {
-    CLKPR = 0x80;   // no CPU prscaler
-    TIMSK1 = 0x21;  // enable input capture interrupt; enable overflow interrupt
-    TCCR1A = 0x00;  // clear any previous configuration
-    TCCR1B = 0x03;  // set prescaler
-    pinMode(8, INPUT);
+    CLKPR = 0x80;           // no CPU prscaler
+    TIMSK1 = 0x21;          // enable input capture interrupt; enable overflow interrupt
+    TCCR1A = 0x00;          // clear any previous configuration
+    TCCR1B = 0x03;          // set prescaler
+    DDRB &= ~(_BV(PB0));    // pinMode(8, INPUT);    
 }
 
