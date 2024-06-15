@@ -9,6 +9,7 @@
 
 volatile uint8_t r_timeOut = 0;
 volatile uint16_t r_reset = 0;
+double r_error = 1.0; 
 
 #include <cores/cores.h>
 
@@ -22,7 +23,11 @@ public:
     }  
 
     uint16_t get() {
-        return (r_timeOut) ? 0 : r_rpm(r_capture);
+        return (r_timeOut) ? 0 : r_rpm(r_capture) * r_error;
+    }
+
+    void error(double _error) {
+        r_error = 1.0 + _error;
     }
 };
 
