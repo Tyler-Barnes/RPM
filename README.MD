@@ -83,7 +83,7 @@ void loop(){
 
 #### **`RPM.get()`** 
 
-The `RPM.get()` method returns a `uint16_t` containing the RPM value measured on the pin specified by `RPM.pin()`. 
+The `RPM.get()` method returns a `uint16_t` containing the RPM value measured on the input capture pin.
 
 ```c++
 #include <RPM.h>
