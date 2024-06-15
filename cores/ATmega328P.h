@@ -28,7 +28,7 @@ void RPMclass::config() {
     CLKPR = 0x80;           // no CPU prscaler
     TIMSK1 = 0x21;          // enable input capture interrupt; enable overflow interrupt
     TCCR1A = 0x00;          // clear any previous configuration
-    TCCR1B = 0x03;          // set prescaler
+    TCCR1B = 0x03;          // timer prescaler 64
     DDRB &= ~(_BV(PB0));    // pinMode(8, INPUT);    
 }
 
