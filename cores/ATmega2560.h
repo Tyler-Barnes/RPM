@@ -4,7 +4,7 @@
 uint16_t r_PRSCLR = 64; 
 
 ISR(TIMER4_CAPT_vect) {
-    TCNT1 = 0;      // reset timer
+    TCNT4 = 0;      // reset timer
     if (++r_reset > r_timeOut) {
         r_timeOut = 0; 
         r_reset = 0; 
