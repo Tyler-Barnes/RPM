@@ -12,8 +12,7 @@ volatile uint16_t r_reset = 0;
 
 #include <cores/cores.h>
 
-#define clkError 1.0005
-#define hz2us 1000000 / (F_CPU * clkError / r_PRSCLR)
+#define hz2us 1000000 / (F_CPU / r_PRSCLR)
 #define r_rpm(x) 60000000 / (hz2us * x)
 
 class RPMclass{
