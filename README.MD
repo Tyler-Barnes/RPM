@@ -112,7 +112,7 @@ The higher the RPM becomes, the less timer counts there are to measure. So, accu
 
 ### **Advanced Features**
 
-#### **`RPM.error(float error)`**
+#### **`RPM.error(float value)`**
 
 If the clock speed on your board is not running to specification, then the RPM calculation can be off. The input voltage will also have a direct effect on clockspeed, so it can vary from application. 
 
