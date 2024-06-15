@@ -12,7 +12,7 @@ The library uses the input capture feature within the hardware timer of the micr
 
 The main focus for making this was creating something that returned an accurate and fresh value instantly without any waiting. It only takes a single revolution to calculate the RPM. 
 
-Also, accuracy was a big focus to get right. While there might be some variation from the CPU being slightly off from the rated clockspeed, it is negligable.
+Also, accuracy was a big focus to get right. While there might be some variation from the CPU being slightly off from the rated clockspeed, it is often negligable.
 
 The size of the library is also very compact. Using only 738 bytes of flash, and 12 bytes of RAM on an Arduino Nano. 
 
@@ -108,7 +108,7 @@ The lowest RPM it will measure is 240RPM.
 
 The highest RPM is around 60,000RPM. 
 
-The higher the RPM becomes, the less timer counts there are to measure. So, accuracy can drop to 0.5% when you are nearing 60,000.  
+The higher the RPM becomes, the less timer counts there are to measure. So, accuracy can drop when you are nearing 60,000.  
 
 ### **Advanced Features**
 
