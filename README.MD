@@ -26,7 +26,7 @@ Here is a table containing which digital pins will lose the `analogWrite()` func
 
 | Platform | Pins |
 |-|-|
-| UNO, Nano, Micro, Leonardo, Sparkfun Pro Micro | 9, 10 |
+| UNO, Nano, Pro Mini, Micro, Leonardo, Sparkfun Pro Micro | 9, 10 |
 | Mega | 6, 7, 8 |
 
 | AVR Chip | Pins |
@@ -35,6 +35,27 @@ Here is a table containing which digital pins will lose the `analogWrite()` func
 | ATmega32U4 | PB5, PB6 |
 | ATmega2560 | PH3, PH4, PH5 |
 
+### **Is My Arduino Compatible?**
+
+Here is a list of boards I know to be compatible: 
+
+| Platform | 
+|-|
+|UNO|
+|Nano|
+|Pro Mini|
+|Micro|
+|Leonardo|
+|Sparkfun Pro Micro|
+
+Here is a list of boards that are not compatible:
+
+| Platform | 
+|-|
+|Nano Every|
+|LilyPad|
+|DFRobot Beetle|
+|DFRobot Beetle BLE|
 
 ### **How to Install It**
 
@@ -57,11 +78,8 @@ Here is a table outlining which pin to use on which platform.
 
 | Platform | Pin |
 |-|-|
-| UNO | 8 |
-| Nano | 8 |
-| Micro | 4 | 
-| Leonardo | 4 |
-| Sparkfun Pro Micro | 4 | 
+| UNO, Nano, Pro Mini | 8 |
+| Micro, Leonardo, Sparkfun Pro Micro | 4 | 
 | Mega | 49 |
 
 If you are not using a premade developement board and instead using a compatible AVR microcontroller in your project, you can see which pin to use in this table: 
