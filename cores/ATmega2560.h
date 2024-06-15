@@ -23,5 +23,5 @@ void r_ic() {
     TIMSK4 = 0x21;          // enable input capture interrupt; enable overflow interrupt
     TCCR4A = 0x00;          // clear any previous configuration
     TCCR4B = 0x03;          // set prescaler
-    DDRL &= ~(_BV(PL1));    // pinMode(48, INPUT);
+    DDRL &= ~(_BV(PL0));    // pinMode(49, INPUT);
 }
