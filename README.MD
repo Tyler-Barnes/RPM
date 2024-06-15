@@ -20,9 +20,21 @@ Lastly, the library does not take away the External Interrupts from the user. So
 
 ### **What are the Drawbacks?**
 
-The library uses Timer1 on the UNO, Nano, Leonardo, and Sparkfun Pro Micro so you will no longer be able to call `analogWrite()` on pins 9 or 10.
+The library has to use a timer to function, so it may take away a PWM channel that happens to use the same timer. 
 
-The library uses Timer4 on the Mega, so you will no longer be able to call `analogWrite()` on pins 6, 7, or 8. 
+Here is a table containing which digital pins will lose the `analogWrite()` function. 
+
+| Platform | Pins |
+|-|-|
+| UNO, Nano, Micro, Leonardo, Sparkfun Pro Micro | 9, 10 |
+| Mega | 6, 7, 8 |
+
+| AVR Chip | Pins |
+|-|-|
+| ATmega328P | PB1, PB2 |
+| ATmega32U4 | PB5, PB6 |
+| ATmega2560 | PH3, PH4, PH5 |
+
 
 ### **How to Install It**
 
@@ -41,9 +53,25 @@ The resulting dialog will allow you to locate the library within your computer's
 ### **Hookup Instructions**
 The input capture method uses very specific pins on the Arduino. They usually do not overlap other powerful functions though. 
 
-- On the Uno, or Nano, the input capture pin is 8. 
-- On the Leonardo, Or Sparkfun Pro Micro, the input capture pin is 4. 
-- On the Mega the input capture pin used is pin 49.
+Here is a table outlining which pin to use on which platform. 
+
+| Platform | Pin |
+|-|-|
+| UNO | 8 |
+| Nano | 8 |
+| Micro | 4 | 
+| Leonardo | 4 |
+| Sparkfun Pro Micro | 4 | 
+| Mega | 49 |
+
+If you are not using a premade developement board and you are instead using a compatible AVR microcontroller in your project, you can see which pin to use in this table: 
+
+| AVR Chip | Pin | 
+|-|-|
+| ATmega328P | PB0 |
+| ATmega32U4 | PD4 | 
+| ATmega2560 | PL0 | 
+
 
 ### **How To Use It**
 To add its functionality to your sketch you'll need to reference the library header file. You do this by adding an include directive to the top of your sketch.
