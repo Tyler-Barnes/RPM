@@ -21,7 +21,7 @@ ISR(TIMER1_OVF_vect) {
 }
 
 uint16_t RPMclass::getRPM() {
-    return (r_timeOut) ? 0 : r_rpm(ICR1) * RPMclass::err;
+    return (r_timeOut) ? 0 : r_rpm(ICR1);
 }
 
 void RPMclass::config() {

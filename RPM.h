@@ -18,7 +18,7 @@ public:
     }  
 
     uint16_t get() {
-        return getRPM();
+        return getRPM() * err;
     }
 
     void error(float _error) {
