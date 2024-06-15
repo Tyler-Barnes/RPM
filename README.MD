@@ -110,6 +110,86 @@ The highest RPM is around 60,000RPM.
 
 The higher the RPM becomes, the less timer counts there are to measure. So, accuracy can drop to 0.5% when you are nearing 60,000.  
 
+### **Advanced Features**
 
+#### **`RPM.error(float error)`**
 
+If the clock speed on your board is not running to specification, then the RPM calculation can be off. The input voltage will also have a direct effect on clockspeed, so it can vary from application. 
+
+My Arduino Mega for example was pretty far off, so I've included a way to correct it. 
+
+You can fine tune the RPM value by using the `RPM.error()` method. It takes in a `float` value. 
+
+I will demonstrate now how to calculate the value you'd want to enter. 
+
+First hook up a calibrated signal source to the input capture pin. I used a function generator set to a pulse wave. 
+
+Set the frequency of the signal source somewere in the 50Hz to 200Hz range. I chose 100Hz in my testing. 
+
+Convert the frequency into an RPM value by multiplying it by 60. 
+
+`100Hz * 60 = 6000RPM`
+
+Next, run a sketch that spits out the RPM value into the Serial Monitor. 
+
+```c++
+#include <RPM.h>
+
+void setup() {
+  Serial.begin(9600);
+  RPM.start(); 
+}
+
+void loop() {
+  Serial.println(RPM.get());
+}
+```
+
+I got an output that looks like this:
+```
+6048
+6048
+6048
+6048
+6050
+6050
+6050
+6050
+6050
+6050
+...
+```
+Subract the measured value from the calculated one. 
+
+`6000 - 6048 = -50`
+
+Then divide the result by the calculated value. 
+
+`-48 / 6000 = -0.008`
+
+This is now the value you should pass into `RPM.error()`. 
+```c++
+#include <RPM.h>
+
+void setup() {
+  Serial.begin(9600);
+  RPM.start(); 
+  RPM.error(-0.008); 
+}
+
+void loop() {
+  Serial.println(RPM.get());
+}
+```
+
+The result should now be calibrated: 
+
+```
+5999
+5999
+6001
+6001
+6001
+6001
+```
 
