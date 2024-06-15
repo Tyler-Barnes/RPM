@@ -7,29 +7,26 @@
 #ifndef RPM_h
 #define RPM_h
 
-volatile uint8_t r_timeOut = 0;
-volatile uint16_t r_reset = 0;
-float r_error = 1.0; 
-
-#include <cores/cores.h>
-
-#define hz2us 1000000 / (F_CPU / r_PRSCLR)
-#define r_rpm(x) 60000000 / (hz2us * x)
-
 class RPMclass{
+private:
+    float err = 1.0;
+    void config();
+    uint16_t getRPM();
 public:
     void start() {
-        r_ic();
+        config();
     }  
 
     uint16_t get() {
-        return (r_timeOut) ? 0 : r_rpm(r_capture) * r_error;
+        return getRPM();
     }
 
     void error(float _error) {
-        r_error = 1.0 + _error;
+        err = 1.0 + _error;
     }
 };
+
+#include <cores/cores.h>
 
 static RPMclass RPM;
 

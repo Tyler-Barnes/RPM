@@ -1,6 +1,9 @@
-#define r_capture ICR1
+#define r_PRSCLR 64
+#define hz2us 1000000 / (F_CPU / r_PRSCLR)
+#define r_rpm(x) 60000000 / (hz2us * x)
 
-uint16_t r_PRSCLR = 64; 
+volatile uint8_t r_timeOut = 0;
+volatile uint16_t r_reset = 0;
 
 ISR(TIMER1_CAPT_vect) {
     TCNT1 = 0;      // reset timer
@@ -17,7 +20,11 @@ ISR(TIMER1_OVF_vect) {
     } 
 }
 
-void r_ic() {
+uint16_t RPMclass::getRPM() {
+    return (r_timeOut) ? 0 : r_rpm(ICR1) * RPMclass::err;
+}
+
+void RPMclass::config() {
     CLKPR = 0x80;           // no CPU prscaler
     TIMSK1 = 0x21;          // enable input capture interrupt; enable overflow interrupt
     TCCR1A = 0x00;          // clear any previous configuration

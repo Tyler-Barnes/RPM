@@ -64,7 +64,7 @@ Here is a table outlining which pin to use on which platform.
 | Sparkfun Pro Micro | 4 | 
 | Mega | 49 |
 
-If you are not using a premade developement board and you are instead using a compatible AVR microcontroller in your project, you can see which pin to use in this table: 
+If you are not using a premade developement board and instead using a compatible AVR microcontroller in your project, you can see which pin to use in this table: 
 
 | AVR Chip | Pin | 
 |-|-|
