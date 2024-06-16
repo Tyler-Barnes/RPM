@@ -7,7 +7,7 @@
 #ifndef RPM_h
 #define RPM_h
 
-void r_incTimeout(); 
+void r_incTimeout(); // used on chips without overflow interrupt
 
 class RPMclass{
 private:

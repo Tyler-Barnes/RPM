@@ -9,7 +9,7 @@ volatile uint32_t r_timeOut = 0;
 // if overflow counter outruns interrupts then detect 0 RPM
 void r_incTimeout() {
     if (micros() - r_timeOut > r_maxTimer) {
-        if (++r_overFlow > 3) r_overFlow = 3; 
+        if (++r_overFlow > 3) r_overFlow = 3; // the hare
     }
 }
 
