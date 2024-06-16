@@ -13,7 +13,7 @@ ISR(TIMER4_CAPT_vect) {
 }
 
 ISR(TIMER4_OVF_vect) {
-    if (++r_overFlow > 4) {
+    if (++r_overFlow > 3) {
         r_overFlow = 2; 
         r_reset = 0;
     } 
