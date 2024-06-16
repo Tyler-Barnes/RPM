@@ -7,6 +7,8 @@
 #ifndef RPM_h
 #define RPM_h
 
+void r_incTimeout(); 
+
 class RPMclass{
 private:
     float err = 1.0;

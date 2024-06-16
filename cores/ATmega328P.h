@@ -2,7 +2,7 @@
 #define r_rpm(x) 60.0 * F_CPU / (x * r_prsclr)
 
 volatile uint8_t r_overFlow = 0;
-volatile uint16_t r_reset = 0;
+volatile uint8_t r_reset = 0;
 
 ISR(TIMER1_CAPT_vect) {
     TCNT1 = 0;      // reset timer
@@ -24,7 +24,7 @@ uint16_t RPMclass::getRPM() {
 }
 
 void RPMclass::config() {
-    CLKPR = 0x80;           // no CPU prscaler
+    CLKPR = 0x80;           // no CPU prescaler
     TIMSK1 = 0x21;          // enable input capture interrupt; enable overflow interrupt
     TCCR1A = 0x00;          // clear any previous configuration
     TCCR1B = 0x03;          // timer prescaler 64

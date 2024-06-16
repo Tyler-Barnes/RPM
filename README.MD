@@ -10,9 +10,11 @@ The library uses the input capture feature within the hardware timer of the micr
 
 ### **Why Use This Over Other Options?**
 
-The main focus for making this was creating something that returned an accurate and fresh value instantly without any waiting. It only takes a single revolution to calculate the RPM. 
+The main focus for making this was creating something that returned an accurate and fresh value instantly without any waiting. It only takes a single revolution to calculate the RPM, which has already happened before calling `RPM.get()`. 
 
-Also, accuracy was a big focus to get right. While there might be some variation from the CPU being slightly off from the rated clockspeed, it is often negligable.
+No setting up interrupts! Other libraries that I tried always required me to set up my own `ISR()`, and to `attachInterrupt()` manually. I might as well have written the entire thing myself at that point. So, that's what I did, so you don't have to. 
+
+Also, accuracy was a big focus to get right. While there might be some variation from the CPU being slightly off from the rated clockspeed, it is often negligable. You can even fine tune the accuracy if you want to. 
 
 The size of the library is also very compact. Using only 666 bytes of flash, and 16 bytes of RAM on an Arduino Nano. 
 
@@ -26,14 +28,16 @@ Here is a table containing which digital pins will lose the `analogWrite()` func
 
 | Platform | Pins |
 |-|-|
-| UNO, Nano, Pro Mini, Micro, Leonardo, Sparkfun Pro Micro | 9, 10 |
+| UNO, Nano, Leonardo, Pro Mini, Micro, Fio, BT, Yun, Sparkfun Pro Micro | 9, 10 |
 | Mega | 6, 7, 8 |
+| Nano Every | 6 |
 
 | AVR Chip | Pins |
 |-|-|
 | ATmega328P | PB1, PB2 |
 | ATmega32U4 | PB5, PB6 |
 | ATmega2560 | PH3, PH4, PH5 |
+| ATmega4809 | PF4 |
 
 ### **Is My Arduino Compatible?**
 
@@ -43,17 +47,21 @@ Here is a list of boards I know to be compatible:
 |-|
 |UNO|
 |Nano|
+|Leonardo|
 |Pro Mini|
 |Micro|
-|Leonardo|
+|Fio|
+|BT|
+|Yun|
 |Sparkfun Pro Micro|
 
 Here is a list of boards that are not compatible:
 
 | Platform | 
 |-|
-|Nano Every|
+|Nano Every (working on it)| 
 |LilyPad|
+|Gemma|
 |DFRobot Beetle|
 |DFRobot Beetle BLE|
 
@@ -76,19 +84,20 @@ The input capture method uses very specific pins on the Arduino. They usually do
 
 Here is a table outlining which pin to use on which platform. 
 
-| Platform | Pin |
+| Platform | Capture Pin |
 |-|-|
-| UNO, Nano, Pro Mini | 8 |
+| UNO, Nano, Pro Mini, Yun, Fio, BT | 8 |
 | Micro, Leonardo, Sparkfun Pro Micro | 4 | 
 | Mega | 49 |
 
 If you are not using a premade developement board and instead using a compatible AVR microcontroller in your project, you can see which pin to use in this table: 
 
-| AVR Chip | Pin | 
+| AVR Chip | Capture Pin | 
 |-|-|
 | ATmega328P | PB0 |
 | ATmega32U4 | PD4 | 
 | ATmega2560 | PL0 | 
+| ATmega4809 | PF4 | 
 
 
 ### **How To Use It**
