@@ -20,7 +20,7 @@ ISR(TCB0_INT_vect){
     if (--r_overFlow < 0) r_overFlow = 0; // the tortoise 
 }
 
-uint16_t RPMclass::getRPM(){
+double RPMclass::getRPM() {
     r_incTimeout();     // if interrupt stops firing, then also detect 0 RPM
     return (r_overFlow) ? 0 : r_rpm(r_capture);
 }

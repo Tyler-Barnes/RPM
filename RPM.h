@@ -13,14 +13,14 @@ class RPMclass{
 private:
     float err = 1.0;
     void config();
-    uint16_t getRPM();
+    double getRPM();
 public:
     void start() {
         config();
     }  
 
     uint16_t get() {
-        return getRPM() * err;
+        return round(getRPM() * err);
     }
 
     void error(float _error) {

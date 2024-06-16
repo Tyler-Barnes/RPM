@@ -19,7 +19,7 @@ ISR(TIMER4_OVF_vect) {
     } 
 }
 
-uint16_t RPMclass::getRPM() {
+double RPMclass::getRPM() {
     return (r_overFlow) ? 0 : r_rpm(ICR4); 
 }
 
