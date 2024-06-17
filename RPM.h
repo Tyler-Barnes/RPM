@@ -20,7 +20,7 @@ public:
     }  
 
     uint16_t get() {
-        return round(getRPM() * err);
+        return (getRPM() * err) + 0.5;
     }
 
     void error(float _error) {
