@@ -87,6 +87,7 @@ Here is a table outlining which pin to use on which platform.
 | Platform | Capture Pin |
 |-|-|
 | UNO, Nano, Pro Mini, Yun, Fio, BT | 8 |
+| Nano Every | 6 |
 | Micro, Leonardo, Sparkfun Pro Micro | 4 | 
 | Mega | 49 |
 
