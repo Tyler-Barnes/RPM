@@ -26,12 +26,11 @@ double RPMclass::getRPM() {
 }
 
 void RPMclass::config() {
-    // CLKCTRL.MCLKCTRLA = 0x00;                           // internal 20MHz clock
-    // CLKCTRL.MCLKCTRLB = 0x00;                           // no prescaler
     EVSYS.CHANNEL4 = EVSYS_GENERATOR_PORT1_PIN4_gc;     // Pin 6 (PF4) set as capture pin
     EVSYS.USERTCB0 = EVSYS_CHANNEL_CHANNEL4_gc;         // TCB0 user connected to event channel4
     TCB0.EVCTRL = TCB_CAPTEI_bm | TCB_EDGE_bm;          // enable input capture on falling edge 
     TCB0.INTCTRL = TCB_CAPT_bm;                         // enable input capture interrupt
     TCB0.CTRLB = TCB_CNTMODE_FRQ_gc;                    // frequency measurement mode               
-    TCB0.CTRLA = TCB_CLKSEL_CLKTCA_gc;                  // use TCA timer prescaler 64
+    TCB0.CTRLA = TCB_CLKSEL_CLKTCA_gc | TCB_ENABLE_bm;  // use TCA timer prescaler 64
+    pinMode(6, INPUT);
 }
