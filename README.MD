@@ -16,7 +16,7 @@ No setting up interrupts! Other libraries that I tried always required me to set
 
 Also, accuracy was a big focus to get right. While there might be some variation from the CPU being slightly off from the rated clockspeed, it is often negligable. You can even fine tune the accuracy if you want to. 
 
-The size of the library is also very compact. Using only 666 bytes of flash, and 16 bytes of RAM on an Arduino Nano. 
+The size of the library is also very compact. Using only 644 bytes of flash, and 15 bytes of RAM on an Arduino Nano. 
 
 Lastly, the library does not take away the External Interrupts from the user. So you are free to use `attachInterrupt()` as you please. 
 
