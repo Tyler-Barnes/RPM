@@ -216,7 +216,7 @@ I got an output that looks like this:
 ```
 Subract the measured value from the calculated one. 
 
-`6000 - 6048 = -50`
+`6000 - 6048 = -48`
 
 Then divide the result by the calculated value. 
 
