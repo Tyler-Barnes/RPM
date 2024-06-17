@@ -47,6 +47,7 @@ Here is a list of boards I know to be compatible:
 |-|
 |UNO|
 |Nano|
+|Nano Every| 
 |Leonardo|
 |Pro Mini|
 |Micro|
@@ -59,7 +60,6 @@ Here is a list of boards that are not compatible:
 
 | Platform | 
 |-|
-|Nano Every (working on it)| 
 |LilyPad|
 |Gemma|
 |DFRobot Beetle|
