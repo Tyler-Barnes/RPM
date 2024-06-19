@@ -2,6 +2,8 @@
 # include <cores/ATmega32U4.h>
 #elif defined(__AVR_ATmega328P__)
 # include <cores/ATmega328P.h>
+#elif defined(__AVR_ATmega168P__)
+# include <cores/ATmega168P.h>
 #elif defined(__AVR_ATmega2560__)
 # include <cores/ATmega2560.h>
 #elif defined(__AVR_ATmega4809__)
