@@ -70,6 +70,7 @@ Untested:
 | Platform | 
 |-|
 |ATtiny10|
+|ATtiny402|
 |ATmega8, ATmega48, ATmega88, ATmega168| 
 
 ### **How to Install It**
@@ -106,6 +107,9 @@ If you are not using a premade developement board and instead using a compatible
 | ATmega32U4 | PD4 | 
 | ATmega2560 | PL0 | 
 | ATmega4809 | PF4 | 
+|ATtiny10||
+|ATtiny402||
+|ATmega168P|PB0|
 
 
 ### **How To Use It**
