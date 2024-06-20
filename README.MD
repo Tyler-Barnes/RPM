@@ -69,7 +69,7 @@ Untested:
 | Platform | 
 |-|
 |ATtiny10|
-|ATmega8,48,88,168| 
+|ATmega8, ATmega48, ATmega88, ATmega168| 
 
 ### **How to Install It**
 
