@@ -65,6 +65,12 @@ Here is a list of boards that are not compatible:
 |DFRobot Beetle|
 |DFRobot Beetle BLE|
 
+Untested: 
+| Platform | 
+|-|
+|ATtiny10|
+|ATmega8,48,88,168| 
+
 ### **How to Install It**
 
 #### **Method 1** _(Recommended)_
