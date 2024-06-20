@@ -35,6 +35,7 @@ Here is a table containing which digital pins will lose the `analogWrite()` func
 | AVR Chip | Pins |
 |-|-|
 | ATmega328P | PB1, PB2 |
+| ATmega168P | PB1, PB2 |
 | ATmega32U4 | PB5, PB6 |
 | ATmega2560 | PH3, PH4, PH5 |
 | ATmega4809 | PF4 |
