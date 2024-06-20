@@ -30,7 +30,7 @@ void RPMclass::config() {
     CLKCTRL.MCLKCTRLA = 0x00;   // 20MHz Clock
     CLKCTRL.MCLKCTRLB = 0x00;   // no prescaler
     EVSYS.ASYNCCH0 = 0x10;      // PA6 input capture pin channel 0
-    EVSYS.ASYNCUSER0 = 0x00;   // TCB0 async user listening to ch0
+    EVSYS.ASYNCUSER0 = 0x00;    // TCB0 async user listening to ch0
     TCB0.CTRLA = 0x03;          // Use TCA prescaler 64
     TCB0.CTRLB = 0x03;          // frequency capture mode
     TCB0.EVCTRL = 0x11;         // Enable input capture on falling edge
