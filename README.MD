@@ -91,7 +91,7 @@ The resulting dialog will allow you to locate the library within your computer's
 ### **Hookup Instructions**
 The input capture method uses very specific pins on the Arduino. They usually do not overlap other powerful functions though. 
 
-Here is a table outlining which pin to use on which platform. 
+Here is a table outlining which pin to connect to your RPM sensor's signal line. 
 
 | Platform | Capture Pin |
 |-|-|
