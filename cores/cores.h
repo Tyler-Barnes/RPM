@@ -14,6 +14,8 @@
 # include <cores/ATmega2560.h>
 #elif defined(__AVR_ATmega4809__)
 # include <cores/ATmega4809.h>
+#elif defined(__AVR_ATtiny10__) || defined(__AVR_ATtiny9__) || defined(__AVR_ATtiny4__) || defined(__AVR_ATtiny5__)
+# include <cores/ATtiny10.h>
 #else
 # error Your archetecture is not yet supported.
 #endif
