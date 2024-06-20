@@ -64,6 +64,7 @@ Here is a list of boards that are not compatible:
 |Gemma|
 |DFRobot Beetle|
 |DFRobot Beetle BLE|
+|ATtiny13A|
 
 Untested: 
 | Platform | 
