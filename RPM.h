@@ -9,14 +9,19 @@
 
 void r_incTimeout(); // used on chips without overflow interrupt
 
+enum PULLUP{
+    EXTERNAL_PULLUP, 
+    INTERNAL_PULLUP
+};
+
 class RPMclass{
 private:
     float err = 1.0;
-    void config();
+    void config(uint8_t _pullup);
     double getRPM();
 public:
-    void start() {
-        config();
+    void start(uint8_t _pullup = EXTERNAL_PULLUP) {
+        config(_pullup);
     }  
 
     uint16_t get() {

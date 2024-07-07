@@ -23,11 +23,19 @@ double RPMclass::getRPM() {
     return (r_overFlow) ? 0 : r_rpm(ICR1); 
 }
 
-void RPMclass::config() {
-    CLKPR = 0x80;           // no CPU prescaler
-    TIMSK1 = 0x21;          // enable input capture interrupt; enable overflow interrupt
-    TCCR1A = 0x00;          // clear any previous configuration
-    TCCR1B = 0x03;          // timer prescaler 64
-    DDRB &= ~(_BV(PB0));    // pinMode(8, INPUT);    
+void RPMclass::config(uint8_t _pullup) {
+    CLKPR = 0x80;                // no CPU prescaler
+    TIMSK1 = 0x21;               // enable input capture interrupt; enable overflow interrupt
+    TCCR1A = 0x00;               // clear any previous configuration
+    TCCR1B = 0x03;               // timer prescaler 64
+    DDRB &= ~(_BV(PB0));         // pinMode(8, INPUT);
+    switch(_pullup){
+    case INTERNAL_PULLUP:
+        PORTB |= _BV(PB0);   // enable pullup
+        break;
+    default:
+        PORTB &= ~(_BV(PB0));// disable pullup 
+        break;
+    }     
 }
 

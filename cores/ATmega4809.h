@@ -25,12 +25,19 @@ double RPMclass::getRPM() {
     return (r_overFlow) ? 0 : r_rpm(r_capture);
 }
 
-void RPMclass::config() {
+void RPMclass::config(uint8_t _pullup) {
     EVSYS.CHANNEL4 = EVSYS_GENERATOR_PORT1_PIN4_gc;     // Pin 6 (PF4) set as capture pin
     EVSYS.USERTCB0 = EVSYS_CHANNEL_CHANNEL4_gc;         // TCB0 user connected to event channel4
     TCB0.EVCTRL = TCB_CAPTEI_bm | TCB_EDGE_bm;          // enable input capture on falling edge 
     TCB0.INTCTRL = TCB_CAPT_bm;                         // enable input capture interrupt
     TCB0.CTRLB = TCB_CNTMODE_FRQ_gc;                    // frequency measurement mode               
     TCB0.CTRLA = TCB_CLKSEL_CLKTCA_gc | TCB_ENABLE_bm;  // use TCA timer prescaler 64
-    pinMode(6, INPUT);
+    switch(_pullup){
+    case INTERNAL_PULLUP:
+        pinMode(6, INPUT_PULLUP);
+        break;
+    default:
+        pinMode(6, INPUT);
+        break;
+    } 
 }

@@ -25,7 +25,7 @@ double RPMclass::getRPM() {
     return (r_overFlow) ? 0 : r_rpm(r_capture);
 }
 
-void RPMclass::config() {
+void RPMclass::config(uint8_t _pullup) {
     CCP = 0x9D;                 // unlock CPU registers
     CLKCTRL.MCLKCTRLA = 0x00;   // 20MHz Clock
     CLKCTRL.MCLKCTRLB = 0x00;   // no prescaler
@@ -36,4 +36,12 @@ void RPMclass::config() {
     TCB0.EVCTRL = 0x11;         // Enable input capture on falling edge
     TCB0.INTCTRL = 0x01;        // enable capture interrupt
     pinMode(PIN_PA6, INPUT);    // PA6 set to input
+    switch(_pullup){
+    case INTERNAL_PULLUP:
+        pinMode(PIN_PA6, INPUT_PULLUP);
+        break;
+    default:
+        pinMode(PIN_PA6, INPUT);
+        break;
+    }
 }
