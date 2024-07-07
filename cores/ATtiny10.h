@@ -24,18 +24,18 @@ double RPMclass::getRPM() {
 }
 
 void RPMclass::config(uint8_t _pullup) {
-    CCP = 0xD8;              // unlock clock register 
-    CLKMSR = 0x00;           // 8MHz internal clock 
-    TCCR0A = 0x00;           // clear any previous configuration
-    TCCR0B = 0x03;           // timer prescaler 64
-    TIMSK0 = 0x21;           // enable input capture interrupt; enable overflow interrupt
+    CCP = 0xD8;                 // unlock clock register 
+    CLKMSR = 0x00;              // 8MHz internal clock 
+    TCCR0A = 0x00;              // clear any previous configuration
+    TCCR0B = 0x03;              // timer prescaler 64
+    TIMSK0 = 0x21;              // enable input capture interrupt; enable overflow interrupt
     DDRB &= ~(_BV(PB1));
     switch(_pullup){
     case INTERNAL_PULLUP:
-        PORTB |= _BV(PB1);   // enable pullup
+        PORTB |= _BV(PB1);      // enable pullup
         break;
     default:
-        PORTB &= ~(_BV(PB1));// disable pullup 
+        PORTB &= ~(_BV(PB1));   // disable pullup 
         break;
     }
 }
