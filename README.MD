@@ -149,7 +149,7 @@ void loop(){
 }
 ```
 
-By default the libray assumes you have an external pullup resistor on your sensor. However, if you would like to use the internal pullup that the Arduino provides, then you can call `INTERNAL_PULLUP` inside the `start()' method. 
+By default the libray assumes you have an external pullup resistor on your sensor. However, if you would like to use the internal pullup that the Arduino provides, then you can call `INTERNAL_PULLUP` inside the `start()` method. 
 
 ```c++
 #include <RPM.h>
