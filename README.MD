@@ -148,6 +148,24 @@ void loop(){
 
 }
 ```
+
+#### **`RPM.get()`** 
+
+The `RPM.get()` method returns a `uint16_t` containing the RPM value measured on the input capture pin.
+
+```c++
+#include <RPM.h>
+
+void setup(){
+    Serial.begin(9600); 
+    RPM.start() 
+}
+
+void loop(){
+    Serial.println(RPM.get());
+}
+```
+
 #### **Pullup Resistors**
 
 RPM sensors typically require a pullup resistor on the signal line. You can choose whether you want an internal or external pullup resistor by passing in `EXTERNAL_PULLUP` or `INTERNAL_PULLUP` to the `start()` method. 
@@ -168,24 +186,7 @@ void loop(){
 }
 ```
 
-Even though `INTERNAL_PULLUP` is the default option, calling it explicitly is recommended since it will ensure that the correct setting is always chosen, even if a future update changes the default. 
-
-#### **`RPM.get()`** 
-
-The `RPM.get()` method returns a `uint16_t` containing the RPM value measured on the input capture pin.
-
-```c++
-#include <RPM.h>
-
-void setup(){
-    Serial.begin(9600); 
-    RPM.start() 
-}
-
-void loop(){
-    Serial.println(RPM.get());
-}
-```
+Even though `INTERNAL_PULLUP` is the default option, calling it explicitly is recommended since it will ensure that the correct setting is always chosen, even if a future update changes the default.
 
 #### **An Important Note on Performance and Accuracy**
 
