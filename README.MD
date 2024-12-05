@@ -150,7 +150,7 @@ void loop(){
 ```
 #### **Pullup Resistors**
 
-RPM sensors typically require a pullup resistor on the signal line. You can choose whether you want an internal or external pullup resistor by passing in `EXTERNAL_PULLUP` or `INTERNAL_PULLUP` to the 'start()' method. 
+RPM sensors typically require a pullup resistor on the signal line. You can choose whether you want an internal or external pullup resistor by passing in `EXTERNAL_PULLUP` or `INTERNAL_PULLUP` to the `start()` method. 
 
 By default, the libray assumes you do not already have an external pullup resistor on your RPM sensor. So, the library enables the internal pullup resistor that the arduino provides. 
 
