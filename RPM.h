@@ -20,7 +20,7 @@ private:
     void config(uint8_t _pullup);
     double getRPM();
 public:
-    void start(uint8_t _pullup = EXTERNAL_PULLUP) {
+    void start(uint8_t _pullup = INTERNAL_PULLUP) {
         config(_pullup);
     }  
 

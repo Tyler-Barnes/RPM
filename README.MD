@@ -148,14 +148,19 @@ void loop(){
 
 }
 ```
+#### **Pullup Resistors**
 
-By default the libray assumes you have an external pullup resistor on your sensor. However, if you would like to use the internal pullup that the Arduino provides, then you can call `INTERNAL_PULLUP` inside the `start()` method. 
+RPM sensors typically require a pullup resistor on the signal line. You can choose whether you want an internal or external pullup resistor by passing in `EXTERNAL_PULLUP` or `INTERNAL_PULLUP` to the 'start()' method. 
+
+By default, the libray assumes you do not already have an external pullup resistor on your RPM sensor. So, the library enables the internal pullup resistor that the arduino provides. 
+
+However, if you would like to use your own external pullup resistor, then you can call `EXTERNAL_PULLUP` inside the `start()` method. 
 
 ```c++
 #include <RPM.h>
 
 void setup(){
-    RPM.start(INTERNAL_PULLUP); 
+    RPM.start(EXTERNAL_PULLUP); 
 }
 
 void loop(){
@@ -163,7 +168,7 @@ void loop(){
 }
 ```
 
-You can also call `EXTERNAL_PULLUP` if you want to be explicit. 
+Even though `INTERNAL_PULLUP` is the default option, calling it explicitly is recommended since it will ensure that the correct setting is always chosen, even if a future update changes the default. 
 
 #### **`RPM.get()`** 
 
