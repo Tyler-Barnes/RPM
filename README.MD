@@ -227,7 +227,7 @@ Next, run a sketch that spits out the RPM value into the Serial Monitor.
 
 void setup() {
   Serial.begin(9600);
-  RPM.start(EXTERNAL_PULLUP); 
+  RPM.start(EXTERNAL_PULLUP); //no pullup for function generator
 }
 
 void loop() {
@@ -263,7 +263,7 @@ This is now the value you should pass into `RPM.error()`.
 
 void setup() {
   Serial.begin(9600);
-  RPM.start(); 
+  RPM.start(EXTERNAL_PULLUP); //no pullup for function generator
   RPM.error(-0.008); 
 }
 
