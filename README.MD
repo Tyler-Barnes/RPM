@@ -158,7 +158,7 @@ The `RPM.get()` method returns a `uint16_t` containing the RPM value measured on
 
 void setup(){
     Serial.begin(9600); 
-    RPM.start() 
+    RPM.start(); 
 }
 
 void loop(){

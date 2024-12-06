@@ -25,11 +25,11 @@ public:
     }  
 
     uint16_t get() {
-        return (getRPM() * err) + 0.5;
+        return (getRPM() * this->err) + 0.5;
     }
 
     void error(float _error) {
-        err = 1.0 + _error;
+        this->err = 1.0 + _error;
     }
 };
 
