@@ -227,7 +227,7 @@ Next, run a sketch that spits out the RPM value into the Serial Monitor.
 
 void setup() {
   Serial.begin(9600);
-  RPM.start(); 
+  RPM.start(EXTERNAL_PULLUP); 
 }
 
 void loop() {
