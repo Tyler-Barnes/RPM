@@ -82,7 +82,7 @@ To install the library, click on the `Sketch` tab within the Arduino IDE, click 
 Once the library browser launches, type `RPM` into the search field, then click on the RPM library's `Install` button. 
 
 #### **Method 2**
-Alternatively, the RPM.h library can be downloaded from the releases section of the [github repository](https://github.com/Tyler-Barnes/RPM). 
+Alternatively, the RPM.h library can be downloaded from the releases section of the [github repository](https://github.com/Tyler-Barnes/RPM/releases). 
 
 Once the .zip file has been downloaded, click on the `Sketch` tab within the Arduino IDE, click on `Include Library`, then click on `Add .ZIP Library...`. 
 
